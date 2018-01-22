@@ -16,16 +16,16 @@ public class ViewConfig extends WebMvcConfigurerAdapter {
      * */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-        registry.addViewController("/index.html").setViewName("index");
-        registry.addViewController("/login.html").setViewName("login");
-        registry.addViewController("/users.html").setViewName("users");
-        registry.addViewController("/kq.html").setViewName("kq");
-        registry.addViewController("/adminKq.html").setViewName("adminKq");
-        registry.addViewController("/printer.html").setViewName("printer");
-        registry.addViewController("/tags.html").setViewName("tags");
-        registry.addViewController("/fields.html").setViewName("fields");
-        registry.addViewController("/sys.html").setViewName("sys");
+        registry.addViewController("/").setViewName("login");
+//        registry.addViewController("/admin/index.html").setViewName("index");
+//        registry.addViewController("/login.html").setViewName("login");
+        registry.addViewController("/admin/users.html").setViewName("users");
+        registry.addViewController("/admin/kq.html").setViewName("kq");
+        registry.addViewController("/admin/adminKq.html").setViewName("adminKq");
+        registry.addViewController("/admin/printer.html").setViewName("printer");
+        registry.addViewController("/admin/tags.html").setViewName("tags");
+        registry.addViewController("/admin/fields.html").setViewName("fields");
+        registry.addViewController("/admin/sys.html").setViewName("sys");
         super.addViewControllers(registry);
     }
 }

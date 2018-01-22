@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -55,7 +55,7 @@
         <!-- LOGO -->
         <div class="topbar-left">
             <div class="text-center">
-                <a href="index.html" class="logo"><i class="md md-terrain"></i> <span>系统名称自定义 </span></a>
+                <a href="/admin/index" class="logo"><i class="md md-terrain"></i> <span>系统名称自定义 </span></a>
             </div>
         </div>
         <!-- Button mobile view to collapse sidebar menu -->
@@ -91,16 +91,8 @@
                 <div class="pull-left">
                     <img src="/images/users/avatar-1.jpg" alt="" class="thumb-md img-circle">
                 </div>
-                <div class="user-info">
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">姓名<span
-                                class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> 我的信息</a></li>
-                            <li><a href="sys.html"><i class="md md-settings"></i> 系统设置</a></li>
-                            <li><a href="javascript:void(0)"><i class="md md-settings-power"></i> 退出系统</a></li>
-                        </ul>
-                    </div>
+                <div class="user-info" th:include="myInfos">
+                    <!-- 引入我的信息 -->
 
                 </div>
             </div>
@@ -108,7 +100,7 @@
             <div id="sidebar-menu">
                 <ul>
                     <li>
-                        <a href="index.html" class="waves-effect waves-light  " id="menu_1"><i
+                        <a href="/admin/index" class="waves-effect waves-light  " id="menu_1"><i
                                 class="md md-home"></i><span> 数据概览 </span></a>
                     </li>
 
