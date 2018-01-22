@@ -10,7 +10,8 @@
 
     <title>艺术信息管理系统</title>
 
-    <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet" type="text/css">
+    <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet"
+          type="text/css">
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/core.css" rel="stylesheet" type="text/css">
     <link href="/css/icons.css" rel="stylesheet" type="text/css">
@@ -145,9 +146,11 @@
 
                         <div class="col-md-12">
                             <div class="input-group m-t-10">
-                                <input type="text" class="form-control" placeholder="输入字段名然后点击添加，但注意字段名不可重复!">
+                                <span id="errMsg" style="color:red"></span>
+                                <input type="text" class="form-control" id="nameField"
+                                       placeholder="输入字段名然后点击添加，但注意字段名不可重复!">
                                 <span class="input-group-btn">
-                                                        <button type="button"
+                                                        <button type="button" onclick="addNew()"
                                                                 class="btn waves-effect waves-light btn-primary">添加</button>
                                                         </span>
                             </div>
@@ -178,17 +181,11 @@
                             </thead>
 
                             <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>身份证号</td>
-                                <td>张三</td>
-                                <td>2018-1-1 10:10:10</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>手机号</td>
-                                <td>张三</td>
-                                <td>2018-1-1 10:10:10</td>
+                            <tr th:each="f:${fields}">
+                                <td th:text="${f.id}">1</td>
+                                <td th:text="${f.name}">身份证号</td>
+                                <td th:text="${f.owner}">张三</td>
+                                <td th:text="${f.created}">2018-1-1 10:10:10</td>
                             </tr>
                             </tbody>
                         </table>
@@ -242,14 +239,6 @@
 <script>
     var resizefunc = [];
 
-    function qrShow(userId) {
-        var qrcode = new QRCode(document.getElementById("qrshow_1"), {
-            width: 96,//设置宽高
-            height: 96
-        });
-        qrcode.makeCode("http://www.baidu.com");
-        $("#btc_show_qr_1").hide();
-    }
 </script>
 
 <!-- jQuery  -->
@@ -303,6 +292,16 @@
             time: 1200
         });
     });
+
+    function addNew() {
+        $.post('/admin/addField', {'addField': $("#nameField").val()}, function (data) {
+            if (data['status'] != 'ok') {
+                $("#errMsg").text(data['msg']);
+            } else {
+                window.location.reload();
+            }
+        })
+    }
 </script>
 
 
