@@ -19,7 +19,8 @@ public class FieldService {
     private FieldDao fieldDao;
 
     public List<Fields> findAll() {
-        return fieldDao.findAll().stream().sorted((a, b) -> b.getId() - a.getId()).collect(Collectors.toList());
+        return fieldDao.findAll();
+//        return fieldDao.findAll().stream().sorted((a, b) -> b.getId() - a.getId()).collect(Collectors.toList());
     }
 
     public boolean exist(String addField) {

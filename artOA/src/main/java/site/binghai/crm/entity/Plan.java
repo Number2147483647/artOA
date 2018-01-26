@@ -17,10 +17,13 @@ public class Plan {
     @Id
     @GeneratedValue
     private int id;
+    private int nowSize;
+    private int allSize;
     private String name;
     private String owner;
     private String created;
     private String qrPass;
     private boolean running;
+    private boolean autoKq;
     private boolean isDeleted;
 }

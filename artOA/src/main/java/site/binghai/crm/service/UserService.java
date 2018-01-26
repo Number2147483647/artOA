@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import site.binghai.crm.dao.UserDao;
 import site.binghai.crm.entity.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,8 +22,13 @@ public class UserService {
 
     public List<User> findAll() {
         return userDao.findAll().stream()
-                .filter(v -> v.isDeleted())
+                .filter(v ->!v.isDeleted())
                 .sorted((a, b) -> b.getId() - a.getId())
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void save(User user) {
+        userDao.save(user);
     }
 }

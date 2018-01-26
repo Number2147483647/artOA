@@ -12,7 +12,6 @@
 
     <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet"
           type="text/css">
-
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/core.css" rel="stylesheet" type="text/css">
     <link href="/css/icons.css" rel="stylesheet" type="text/css">
@@ -21,8 +20,19 @@
     <link href="/css/menu.css" rel="stylesheet" type="text/css">
     <link href="/css/responsive.css" rel="stylesheet" type="text/css">
 
+    <!-- DataTables -->
+    <link href="/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
     <script src="/js/modernizr.min.js"></script>
 
+    <!-- Plugin Css-->
+    <link rel="stylesheet" href="http://s3.mogucdn.com/mlcdn/c45406/180122_21j45jbb6k94hbh53cel78jf0h06h.css">
+    <link rel="stylesheet" href="/plugins/jquery-datatables-editable/datatables.css">
+    <link href="/plugins/notifications/notification.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -30,6 +40,8 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+
+    <script src="http://s3.mogucdn.com/mlcdn/c45406/171127_3b6b06862307ia661k3bhf910dh50.js"></script>
 
 </head>
 
@@ -89,7 +101,7 @@
             <div id="sidebar-menu">
                 <ul>
                     <li>
-                        <a href="/admin/index" class="waves-effect waves-light " id="menu_1"><i
+                        <a href="/admin/index" class="waves-effect waves-light  " id="menu_1"><i
                                 class="md md-home"></i><span> 数据概览 </span></a>
                     </li>
 
@@ -106,6 +118,7 @@
                                 class="md ion-printer"></i><span> 数据打印 </span></a>
                     </li>
                 </ul>
+                <div id="qr_show"></div>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -121,61 +134,42 @@
         <div class="content">
             <div class="container">
                 <!-- 主体内容 begin -->
+                <!-- Page-Title -->
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">功能区</h3>
-                            </div>
-                            <div class="panel-body">
-                                <a href="/admin/addKq">
-                                    <button type="button" class="btn btn-info waves-effect waves-light m-b-5">新建计划
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
+                    <div class="col-sm-12">
+                        <h4 class="pull-left page-title">添加考勤计划</h4>
+                        <span style="color:red" th:text="${errMsg}"></span>
                     </div>
                 </div>
-                <!-- end row -->
-                <div class="row">
-                    <div class="col-sm-6 col-lg-4" th:each="one:${all}">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <div class="media-main">
 
-                                    <div class="info">
-                                        <h4 th:text="${one.name}" th:style="${'color:'+(one.running?'green':'red')}">2018-1-1 **考试学生打卡</h4>
-                                        <p class="text-muted" th:text="${one.owner + ' '+one.created+'创建 '+one.nowSize+'/'+one.allSize}">
-                                            某管理员2018-1-1 10:10:10创建，90/100</p>
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="form">
+                            <form class="cmxform form-horizontal tasi-form" id="commentForm" method="post" action="addPlan" novalidate="novalidate">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2">计划名称</label>
+                                    <div class="col-lg-10">
+                                        <input class="form-control" th:value="${TjName}" name="planName" type="text" required="" aria-required="true">
                                     </div>
                                 </div>
-                                <div class="clearfix"></div>
-                                <hr>
-                                <ul class="social-links list-inline">
-                                    <li th:if="${one.running}">
-                                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips"
-                                           th:href="${'stopKq?id='+one.id}"
-                                           data-original-title="结束打卡"><i class="fa  fa-warning"></i></a>
-                                    </li>
-                                    <li>
-                                        <a data-placement="top" data-toggle="tooltip" class="tooltips"
-                                           th:href="${'adminKq?id='+one.id}"
-                                           data-original-title="管理打卡"><i class="fa fa-twitch"></i></a>
-                                    </li>
-                                    <li th:if="${one.autoKq}">
-                                        <a data-placement="top" data-toggle="tooltip" class="tooltips" th:href="${'kqSwitch?id='+one.id}"
-                                           data-original-title="自助打卡开"><i class="fa fa-toggle-on"></i></a>
-                                    </li>
-                                    <li th:if="${!one.autoKq}">
-                                        <a data-placement="top" data-toggle="tooltip" class="tooltips" th:href="${'kqSwitch?id='+one.id}"
-                                           data-original-title="自助打卡关"><i class="fa fa-toggle-off"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div> <!-- panel -->
-                    </div> <!-- end col -->
-
-                </div> <!-- End row -->
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2">预期考勤人数</label>
+                                    <div class="col-lg-10">
+                                        <input class="form-control"  th:value="${AllSize}" name="preSize" type="text" required="" aria-required="true">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        <button class="btn btn-success waves-effect waves-light" type="submit">新建计划</button>
+                                        <a href="kq">
+                                            <button class="btn btn-default waves-effect" type="button">取消</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div> <!-- .form -->
+                    </div>
+                </div>
                 <!-- 主体内容 end -->
             </div> <!-- container -->
 
@@ -190,12 +184,39 @@
     <!-- End Right content here -->
     <!-- ============================================================== -->
 
+
+    <!-- MODAL -->
+    <div id="dialog" class="modal-block mfp-hide">
+        <section class="panel panel-info panel-color">
+            <header class="panel-heading">
+                <h2 class="panel-title">确定删除?</h2>
+            </header>
+            <div class="panel-body">
+                <div class="modal-wrapper">
+                    <div class="modal-text">
+                        <p>你确定要删除这行数据吗?</p>
+                    </div>
+                </div>
+
+                <div class="row m-t-20">
+                    <div class="col-md-12 text-right">
+                        <button id="dialogConfirm" class="btn btn-primary waves-effect waves-light">确定</button>
+                        <button id="dialogCancel" class="btn btn-default waves-effect">取消</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- end Modal -->
 </div>
 <!-- END wrapper -->
 
 
 <script>
     var resizefunc = [];
+
 </script>
 
 <!-- jQuery  -->
@@ -218,14 +239,45 @@
 <!-- counters  -->
 <script src="/plugins/waypoints/lib/jquery.waypoints.js"></script>
 <script src="/plugins/counterup/jquery.counterup.min.js"></script>
+<!-- Datatables-->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="/plugins/datatables/jszip.min.js"></script>
+<script src="/plugins/datatables/pdfmake.min.js"></script>
+<script src="/plugins/datatables/vfs_fonts.js"></script>
+<script src="/plugins/datatables/buttons.html5.min.js"></script>
+<script src="/plugins/datatables/buttons.print.min.js"></script>
+<script src="/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+<script src="/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="/plugins/datatables/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables/responsive.bootstrap.min.js"></script>
+<script src="/plugins/datatables/dataTables.scroller.min.js"></script>
+<!--notify-->
+<script src="http://s3.mogucdn.com/mlcdn/c45406/180122_64kjgad5e9bhel4b25dgl8f6flfba.js"></script>
+<script src="/plugins/notifications/notify-metro.js"></script>
+<script src="/plugins/notifications/notifications.js"></script>
 
+<!-- Modal-Effect -->
+<script src="/plugins/modal-effect/js/classie.js"></script>
+<script src="/plugins/modal-effect/js/modalEffects.js"></script>
+<!--form validation-->
+<script type="text/javascript" src="/plugins/jquery-validation/dist/jquery.validate.min.js"></script>
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
-        $('.counter').counterUp({
-            delay: 100,
-            time: 1200
-        });
+        $("#commentForm").validate();
     });
+
+    function addNew() {
+        $.post('/admin/addField', {'addField': $("#nameField").val()}, function (data) {
+            if (data['status'] != 'ok') {
+                $("#errMsg").text(data['msg']);
+            } else {
+                window.location.reload();
+            }
+        })
+    }
 </script>
 
 

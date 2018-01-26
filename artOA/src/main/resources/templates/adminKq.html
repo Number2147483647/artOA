@@ -22,6 +22,7 @@
 
     <script src="/js/modernizr.min.js"></script>
 
+    <script src="http://s3.mogucdn.com/mlcdn/c45406/171127_3b6b06862307ia661k3bhf910dh50.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -130,28 +131,29 @@
                                         <!-- Personal-Information -->
                                         <div class="panel panel-default panel-fill">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title">考勤名称</h3>
+                                                <h3 class="panel-title" th:text="${plan.name}">考勤名称</h3>
                                             </div>
                                             <div class="panel-body">
                                                 <div class="about-info-p">
                                                     <strong>发起人</strong>
                                                     <br>
-                                                    <p class="text-muted">发起人姓名</p>
+                                                    <p class="text-muted" th:text="${plan.owner}">发起人姓名</p>
                                                 </div>
                                                 <div class="about-info-p">
                                                     <strong>创建时间</strong>
                                                     <br>
-                                                    <p class="text-muted">2018-1-1</p>
+                                                    <p class="text-muted" th:text="${plan.created}">2018-1-1</p>
                                                 </div>
                                                 <div class="about-info-p">
                                                     <strong>扫描秘钥</strong>
                                                     <br>
-                                                    <p class="text-muted">YUSZ</p>
+                                                    <input id="qrCodePass" type="hidden" th:value="${plan.qrPass}">
+                                                    <p class="text-muted"  id="qrCodePassShow"></p>
                                                 </div>
                                                 <div class="about-info-p m-b-0">
                                                     <strong>已扫人数</strong>
                                                     <br>
-                                                    <p class="text-muted">99</p>
+                                                    <p class="text-muted" th:text="${plan.nowSize+'/'+plan.allSize}">99</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -243,10 +245,12 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
-        $('.counter').counterUp({
-            delay: 100,
-            time: 1200
+        var text = $("#qrCodePass").val();
+        var qrcode = new QRCode(document.getElementById("qrCodePassShow"), {
+            width: 96,//设置宽高
+            height: 96
         });
+        qrcode.makeCode(text);
     });
 </script>
 

@@ -10,7 +10,8 @@
 
     <title>艺术信息管理系统</title>
 
-    <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet" type="text/css">
+    <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet"
+          type="text/css">
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/core.css" rel="stylesheet" type="text/css">
     <link href="/css/icons.css" rel="stylesheet" type="text/css">
@@ -146,11 +147,13 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="m-b-30">
-                                    <button class="btn btn-primary waves-effect waves-light">新增记录 <i
-                                            class="fa fa-plus"></i></button>
+                                    <a href="/admin/addUser">
+                                        <button class="btn btn-primary waves-effect waves-light">新增记录 <i
+                                                class="fa fa-plus"></i></button>
+                                    </a>
                                     <!--<a href="tags.html">-->
-                                        <!--<button class="btn btn-success waves-effect waves-light">标签管理 <i-->
-                                                <!--class="fa fa-tags"></i></button>-->
+                                    <!--<button class="btn btn-success waves-effect waves-light">标签管理 <i-->
+                                    <!--class="fa fa-tags"></i></button>-->
                                     <!--</a>-->
                                     <a href="fields.html">
                                         <button class="btn btn-info waves-effect waves-light">字段管理 <i
@@ -163,31 +166,23 @@
                         <table id="datatable" class="table table-striped table-bordered">
                             <thead>
                             <tr>
-                                <th>姓名</th>
-                                <th>手机号</th>
+                                <div th:each="schema:${schemas}">
+                                    <th th:text="${schema.name}">字段名</th>
+                                </div>
                                 <th>微信绑定</th>
-                                <th>学号</th>
-                                <th>身份证号</th>
-                                <th>考号</th>
-                                <th>考场</th>
-                                <th>二维码</th>
+                                <th>操作</th>
                             </tr>
                             </thead>
 
 
                             <tbody>
-                            <tr>
-                                <td>Tiger Nixon</td>
-                                <td>System Architect</td>
-                                <td>Edinburgh</td>
-                                <td>61</td>
-                                <td>2011/04/25</td>
-                                <td>$320,800</td>
-                                <td>$320,800</td>
-                                <td>$320,800</td>
-                                <td id="qrshow_1">
-                                    <button class="btn btn-info waves-effect waves-light m-b-5" id="btc_show_qr_1"
-                                            onclick="qrShow(1)"><i class="fa  fa-qrcode"></i> <span>显示二维码</span>
+                            <tr th:each="user:${users}">
+                                <td th:each="schema:${schemas}"><span th:text="${user[schema.code]}">项值</span></td>
+                                <div  th:if="${user['wxBind']}"><td><span class="badge badge-success">是</span></td></div>
+                                <div  th:if="${!user['wxBind']}"><td><span class="badge badge-danger">否</span></td></div>
+                                <td th:id="${'qrshow_'+user['id']}">
+                                    <button class="btn btn-info waves-effect waves-light m-b-5" th:id="'btc_show_qr_'+${user['id']}" th:value="${user['qrCode']}"
+                                            th:onclick="${'qrShow('+user['id']+')'}"><i class="fa  fa-qrcode"></i> <span>显示二维码</span>
                                     </button>
                                 </td>
                             </tr>
@@ -243,13 +238,14 @@
 <script>
     var resizefunc = [];
 
-    function qrShow(userId) {
-        var qrcode = new QRCode(document.getElementById("qrshow_1"), {
+    function qrShow(id) {
+        var text = $("#btc_show_qr_"+id).val();
+        var qrcode = new QRCode(document.getElementById("qrshow_"+id), {
             width: 96,//设置宽高
             height: 96
         });
-        qrcode.makeCode("http://www.baidu.com");
-        $("#btc_show_qr_1").hide();
+        qrcode.makeCode(text);
+        $("#btc_show_qr_"+id).hide();
     }
 </script>
 
@@ -299,10 +295,7 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
-        $('.counter').counterUp({
-            delay: 100,
-            time: 1200
-        });
+
     });
 </script>
 

@@ -10,9 +10,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class MD5 {
     /**
-     *
-     * @param plainText
-     *            明文
+     * @param plainText 明文
      * @return 32位密文
      */
     public static String encryption(String plainText) {
@@ -42,10 +40,14 @@ public class MD5 {
         return re_md5;
     }
 
+    public static String shortMd5(String text) {
+        return encryption(text).substring(0, 6);
+    }
+
     /**
      * 生成随机的短密码
-     * */
+     */
     public static String sortPass() {
-        return MD5.encryption(System.currentTimeMillis()+"").substring(17);
+        return MD5.encryption(System.currentTimeMillis() + "").substring(17);
     }
 }
