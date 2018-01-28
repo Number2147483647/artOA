@@ -78,4 +78,14 @@ public class UserService {
         }
         return users.get(0);
     }
+
+    public List<User> findByUserIds(List<Integer> userIds) {
+        List<User> t = userDao.findAll(userIds);
+        t.sort((a, b) -> b.getId() - a.getId());
+        return t;
+    }
+
+    public User findOne(int userId) {
+        return userDao.findOne(userId);
+    }
 }

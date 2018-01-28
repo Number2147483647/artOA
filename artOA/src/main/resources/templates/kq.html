@@ -20,7 +20,7 @@
     <link href="/css/pages.css" rel="stylesheet" type="text/css">
     <link href="/css/menu.css" rel="stylesheet" type="text/css">
     <link href="/css/responsive.css" rel="stylesheet" type="text/css">
-
+    <link href="/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
     <script src="/js/modernizr.min.js"></script>
 
 
@@ -154,7 +154,7 @@
                                 <ul class="social-links list-inline">
                                     <li th:if="${one.running}">
                                         <a title="" data-placement="top" data-toggle="tooltip" class="tooltips"
-                                           th:href="${'stopKq?id='+one.id}"
+                                           th:href="${'javascript:stopKq('+one.id+')'}"
                                            data-original-title="结束打卡"><i class="fa  fa-warning"></i></a>
                                     </li>
                                     <li>
@@ -218,7 +218,8 @@
 <!-- counters  -->
 <script src="/plugins/waypoints/lib/jquery.waypoints.js"></script>
 <script src="/plugins/counterup/jquery.counterup.min.js"></script>
-
+<!-- Sweet-Alert  -->
+<script src="/plugins/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
         $('.counter').counterUp({
@@ -226,6 +227,21 @@
             time: 1200
         });
     });
+
+    function stopKq(planId) {
+        swal({
+            title: "你确定关闭此次打卡计划吗?",
+            text: "关闭后将无法再开启!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "我决定关闭",
+            cancelButtonText:"不关闭",
+            closeOnConfirm: false
+        }, function(){
+           window.location.href="stopKq?id="+planId;
+        });
+    }
 </script>
 
 

@@ -19,11 +19,13 @@ public class PlanDetail {
     private int id;
     private int planId;
     private int userId;
+    private String uname;
     private String scanOpenId; // 扫描者openId
     private String createdTime;
     private boolean autoKq; // 自助考勤
 
-    public PlanDetail(int planId, int userId, String scanOpenId, String createdTime, boolean autoKq) {
+    public PlanDetail(String uname,int planId, int userId, String scanOpenId, String createdTime, boolean autoKq) {
+        this.uname = uname;
         this.planId = planId;
         this.userId = userId;
         this.scanOpenId = scanOpenId;

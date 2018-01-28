@@ -1,5 +1,6 @@
 package site.binghai.crm.dao;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import site.binghai.crm.entity.PlanDetail;
 
@@ -13,4 +14,6 @@ import java.util.List;
 public interface PlanDetailDao extends JpaRepository<PlanDetail,Integer> {
 
     List<PlanDetail> findByUserIdAndPlanId(int userId,int planId);
+    List<PlanDetail> findByPlanId(int planId);
+    List<PlanDetail> findByPlanIdOrderByIdDesc(int planId, Pageable pageable);
 }

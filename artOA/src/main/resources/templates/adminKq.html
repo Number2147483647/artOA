@@ -10,7 +10,8 @@
 
     <title>艺术信息管理系统</title>
 
-    <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet" type="text/css">
+    <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet"
+          type="text/css">
 
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/core.css" rel="stylesheet" type="text/css">
@@ -153,12 +154,13 @@
                                                     <strong>扫描秘钥</strong>
                                                     <br>
                                                     <input id="qrCodePass" type="hidden" th:value="${plan.qrPass}">
-                                                    <p class="text-muted"  id="qrCodePassShow"></p>
+                                                    <p class="text-muted" id="qrCodePassShow"></p>
                                                 </div>
                                                 <div class="about-info-p m-b-0">
                                                     <strong>已扫人数</strong>
                                                     <br>
-                                                    <p class="text-muted" th:text="${plan.nowSize+'/'+plan.allSize}">99</p>
+                                                    <p class="text-muted" th:text="${plan.nowSize+'/'+plan.allSize}">
+                                                        99</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -170,10 +172,8 @@
                                                 <h3 class="panel-title">最近扫描</h3>
                                             </div>
                                             <div class="panel-body">
-                                                <ul>
-                                                    <li>张三 @ 2018-1-1 20:00:05</li>
-                                                    <li>李四 @ 2018-1-1 20:00:05</li>
-                                                    <li>王五 @ 2018-1-1 20:00:05</li>
+                                                <ul id="recents">
+                                                    <li>loading</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -186,15 +186,10 @@
                                         <!-- Personal-Information -->
                                         <div class="panel panel-default panel-fill">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title">当前扫描 @ 2018-1-1 20:00:05</h3>
+                                                <h3 class="panel-title" id="lastTime">当前扫描 @ loading</h3>
                                             </div>
-                                            <div class="panel-body">
-                                                <h3>姓名</h3>
-                                                <p>性别</p>
-                                                <p>出生年月</p>
-                                                <p>手机号</p>
-                                                <p>考场号</p>
-                                                。。。。
+                                            <div class="panel-body" id="lastHtml">
+                                                <h3>loading</h3>
                                             </div>
                                         </div>
                                         <!-- Personal-Information -->
@@ -248,7 +243,7 @@
 <script src="/plugins/waypoints/lib/jquery.waypoints.js"></script>
 <script src="/plugins/counterup/jquery.counterup.min.js"></script>
 
-<script type="text/javascript">
+<script th:inline="javascript">
     jQuery(document).ready(function ($) {
         var text = $("#qrCodePass").val();
         var qrcode = new QRCode(document.getElementById("qrCodePassShow"), {
@@ -256,7 +251,20 @@
             height: 96
         });
         qrcode.makeCode(text);
+
+        setInterval(lastScan, 1000);
     });
+
+    function lastScan() {
+        var planId = [[${plan.id}]]
+        $.getJSON('/admin/lastScan?planId=' + planId, function (data) {
+            if (data['status'] == 'ok') {
+                $("#lastHtml").html(data['msg']);
+                $("#recents").html(data['data']['data']);
+                $("#lastTime").text('当前扫描 @ '+data['data']['time']);
+            }
+        })
+    }
 </script>
 
 

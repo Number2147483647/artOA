@@ -55,16 +55,6 @@ public class WxController extends BaseController {
         return "userLogin";
     }
 
-    public String getField(String key, List<Fields> fields) {
-        for (Fields f : fields) {
-            if (key.equals(MD5.shortMd5(f.getName()))) {
-                return f.getName();
-            }
-        }
-
-        return "其他信息";
-    }
-
     @RequestMapping("unBind")
     public String unBind() {
         User user = (User) getServletRequest().getSession().getAttribute("user");
@@ -97,10 +87,10 @@ public class WxController extends BaseController {
     public Object kq(@RequestParam Integer planId) {
         User user = (User) getServletRequest().getSession().getAttribute("user");
         if (planDetailService.findByUserIdAndPlanId(user.getId(), planId) == null) {
-            PlanDetail planDetail = new PlanDetail(planId,user.getId(),"", TimeFormatter.format(System.currentTimeMillis()),true);
+            PlanDetail planDetail = new PlanDetail(user.getName(), planId, user.getId(), "", TimeFormatter.format(System.currentTimeMillis()), true);
 
             planDetailService.save(planDetail);
-        }else{
+        } else {
             return fail("你已经打卡了!");
         }
         return success();

@@ -30,8 +30,6 @@ import java.util.stream.Collectors;
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private FieldService fieldService;
 
     @RequestMapping("users")
     public String users(String anySearch, ModelMap map) {
@@ -64,17 +62,6 @@ public class UserController extends BaseController {
         }
         return true;
     }
-
-    public List<Schema> getSchemas() {
-        List<String> schema = new ArrayList<>();
-        schema.add("姓名");
-        schema.add("手机号");
-        schema.addAll(fieldService.findAll().stream().map(v -> v.getName()).collect(Collectors.toList()));
-        schema.add("微信绑定");
-        schema.add("二维码");
-        return schema.stream().map(v -> new Schema(v)).collect(Collectors.toList());
-    }
-
 
     @RequestMapping(value = "addUser", method = RequestMethod.GET)
     public String toAddUser(ModelMap map) {
