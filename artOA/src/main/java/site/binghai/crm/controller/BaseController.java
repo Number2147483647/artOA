@@ -1,9 +1,12 @@
 package site.binghai.crm.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import site.binghai.crm.service.AdminService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
  * @ artOA
  */
 public abstract class BaseController {
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * 从thread local获取网络上下文
      */

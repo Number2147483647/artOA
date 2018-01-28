@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import site.binghai.crm.entity.Schema;
@@ -33,8 +34,8 @@ public class UserController extends BaseController {
     private FieldService fieldService;
 
     @RequestMapping("users")
-    public String users(ModelMap map) {
-        List<User> users = userService.findAll();
+    public String users(String anySearch, ModelMap map) {
+        List<User> users = StringUtils.isEmpty(anySearch) ? userService.findAll() : userService.filter(anySearch);
         List<JSONObject> infos = new ArrayList<>();
         List<Schema> schemas = getSchemas();
         schemas.remove(schemas.size() - 1);

@@ -42,11 +42,12 @@ public class KqController extends BaseController {
 
 
     @RequestMapping(value = "addPlan", method = RequestMethod.POST)
-    public String addPlan(@RequestParam String planName, @RequestParam Integer preSize) {
+    public String addPlan(@RequestParam String planName,@RequestParam String text, @RequestParam Integer preSize) {
         Admin admin = (Admin) getServletRequest().getSession().getAttribute("admin");
         Plan plan = new Plan();
         plan.setAllSize(preSize);
         plan.setNowSize(0);
+        plan.setText(text);
         plan.setCreated(TimeFormatter.format(System.currentTimeMillis()));
         plan.setDeleted(false);
         plan.setName(planName);

@@ -27,12 +27,15 @@ public class HttpRequestUtils {
     public static String getRequestParams(HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
         Map<String, String> map = getRequestParamMap(request);
+        if(map == null || map.size() == 0){
+            return "";
+        }
         Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry next = it.next();
             sb.append("&" + next.getKey() + "=" + next.getValue());
         }
-        return sb.substring(1);
+        return "?" + sb.substring(1);
     }
 
     public static Map<String, String> getRequestParamMap(HttpServletRequest request) {
@@ -50,7 +53,7 @@ public class HttpRequestUtils {
     }
 
     public static String getRequestFullPath(HttpServletRequest request) {
-        return getRequestURL(request) + "?" + getRequestParams(request);
+        return getRequestURL(request) + getRequestParams(request);
     }
 
     public static String getRequestPath(HttpServletRequest request) {

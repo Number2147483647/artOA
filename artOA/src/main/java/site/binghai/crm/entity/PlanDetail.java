@@ -21,5 +21,16 @@ public class PlanDetail {
     private int userId;
     private String scanOpenId; // 扫描者openId
     private String createdTime;
+    private boolean autoKq; // 自助考勤
 
+    public PlanDetail(int planId, int userId, String scanOpenId, String createdTime, boolean autoKq) {
+        this.planId = planId;
+        this.userId = userId;
+        this.scanOpenId = scanOpenId;
+        this.createdTime = createdTime;
+        this.autoKq = autoKq;
+    }
+
+    public PlanDetail() {
+    }
 }

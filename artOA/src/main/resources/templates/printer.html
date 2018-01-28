@@ -10,7 +10,8 @@
 
     <title>艺术信息管理系统</title>
 
-    <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet" type="text/css">
+    <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet"
+          type="text/css">
 
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/core.css" rel="stylesheet" type="text/css">
@@ -56,9 +57,9 @@
                         </button>
                         <span class="clearfix"></span>
                     </div>
-                    <form class="navbar-form pull-left" role="search">
+                    <form class="navbar-form pull-left" role="search" method="post" action="/admin/users">
                         <div class="form-group">
-                            <input type="text" class="form-control search-bar" placeholder="任意搜...">
+                            <input type="text" class="form-control search-bar" name="anySearch" placeholder="任意搜...">
                         </div>
                         <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
                     </form>
@@ -101,7 +102,7 @@
                                 class="md  ion-ios7-timer"></i><span> 考勤管理 </span></a>
                     </li>
                     <li>
-                        <a href="printer.html" class="waves-effect waves-light active"><i
+                        <a href="print" class="waves-effect waves-light active"><i
                                 class="md ion-printer"></i><span> 数据打印 </span></a>
                     </li>
                 </ul>
@@ -123,24 +124,28 @@
                 <div class="panel-body">
 
                     <div class="col-md-12">
-                        <div class="input-group m-t-10">
-                            <input type="text" class="form-control" placeholder="输入任意过滤关键字进行过滤">
-                            <span class="input-group-btn">
-                                                        <button type="button"
+                        <form action="" method="post">
+                            <div class="input-group m-t-10">
+                                <input type="text" class="form-control" name="anySearch" placeholder="输入任意过滤关键字进行过滤">
+                                <span class="input-group-btn">
+                                                        <button type="submit"
                                                                 class="btn waves-effect waves-light btn-primary">过滤</button>
                                 <button type="button" onclick="window.print()"
                                         class="btn waves-effect waves-light btn-info">打印</button>
                                                         </span>
-                        </div>
+                            </div>
+                        </form>
                     </div>
+
                 </div>
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-lg-3">
+                    <div class="col-md-6 col-sm-6 col-lg-3" th:each="user:${users}">
                         <div class="mini-stat clearfix bx-shadow bg-white">
-                            <span class="mini-stat-icon" id="qr_print_01"></span>
+                            <input th:id="${'qr_value_'+user.id}" th:value="${user.qrCode}" type="hidden"/>
+                            <span class="mini-stat-icon" th:id="${'qr_print_'+user.id}"></span>
                             <div class="mini-stat-info text-right text-dark">
-                                <span class="name text-dark">张三</span>
-                                身份证号
+                                <span class="name text-dark" th:text="${user.name}">张三</span>
+                                <div th:text="${user.phone}">身份证号</div>
                             </div>
                             <br>
                         </div>
@@ -164,14 +169,19 @@
 <!-- END wrapper -->
 
 
-<script>
+<script th:inline="javascript">
     var resizefunc = [];
-    function qrShow(userId) {
-        var qrcode = new QRCode(document.getElementById("qr_print_01"), {
-            width: 80,//设置宽高
-            height: 80
-        });
-        qrcode.makeCode("http://www.baidu.com");
+    function qrShowRender() {
+        var userIds = [[${userIds}]];
+
+        for (var i = 0; i < userIds.length; i++) {
+            var qrcode = new QRCode(document.getElementById("qr_print_" + userIds[i]), {
+                width: 80,//设置宽高
+                height: 80
+            });
+            var text = $("#qr_value_" + userIds[i]).val();
+            qrcode.makeCode(text);
+        }
     }
 </script>
 
@@ -198,11 +208,7 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
-        $('.counter').counterUp({
-            delay: 100,
-            time: 1200
-        });
-        qrShow(1);
+        qrShowRender();
     });
 </script>
 
