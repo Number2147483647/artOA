@@ -9,7 +9,9 @@ import org.springframework.util.StringUtils;
 import site.binghai.crm.dao.AdminDao;
 import site.binghai.crm.entity.Admin;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by binghai on 2018/1/22.
@@ -29,6 +31,7 @@ public class AdminService {
     public Admin adminLogin(Admin admin) {
         if (admin != null && !StringUtils.isEmpty(admin.getUsername()) && !StringUtils.isEmpty(admin.getPassword())) {
             List<Admin> ls = adminDao.findByPhoneAndPassword(admin.getUsername(), admin.getPassword());
+            ls = ls.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
             if (CollectionUtils.isEmpty(ls) || ls.size() > 1) {
                 logger.error("登录校验失败:{},rs = {}", admin, ls);
                 return null;
@@ -36,5 +39,26 @@ public class AdminService {
             return ls.get(0);
         }
         return null;
+    }
+
+
+    public List<Admin> findAll() {
+        List<Admin> all = findAll();
+        return all.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
+    }
+
+    public Admin findByPhone(String phone) {
+        List<Admin> ads = adminDao.findByPhone(phone);
+        ads = ads.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
+        return CollectionUtils.isEmpty(ads) ? null : ads.get(0);
+    }
+
+    @Transactional
+    public void save(Admin add) {
+        adminDao.save(add);
+    }
+
+    public Admin findById(Integer id) {
+        return adminDao.findOne(id);
     }
 }

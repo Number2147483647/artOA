@@ -12,4 +12,5 @@ import java.util.List;
  */
 public interface AdminDao extends JpaRepository<Admin,Integer>{
     List<Admin> findByPhoneAndPassword(String phone,String pass);
+    List<Admin> findByPhone(String p);
 }

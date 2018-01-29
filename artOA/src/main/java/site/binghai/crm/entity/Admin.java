@@ -21,7 +21,19 @@ public class Admin {
     private String phone;
     private String password;
     private String owner;
+    private String killer; //删除人
     private String createdTime;
     private boolean isDeleted;
 
+    public Admin(String username, String phone, String password, String owner, String createdTime, boolean isDeleted) {
+        this.username = username;
+        this.phone = phone;
+        this.password = password;
+        this.owner = owner;
+        this.createdTime = createdTime;
+        this.isDeleted = isDeleted;
+    }
+
+    public Admin() {
+    }
 }
