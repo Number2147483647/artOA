@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import site.binghai.crm.dao.PlanDetailDao;
 import site.binghai.crm.entity.PlanDetail;
+import site.binghai.crm.utils.TimeFormatter;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -21,8 +22,8 @@ public class PlanDetailService {
     private PlanDetailDao detailDao;
 
 
-    public PlanDetail findByUserIdAndPlanId(int userId,int planId){
-        List<PlanDetail> planDetails = detailDao.findByUserIdAndPlanId(userId,planId);
+    public PlanDetail findByUserIdAndPlanId(int userId, int planId) {
+        List<PlanDetail> planDetails = detailDao.findByUserIdAndPlanId(userId, planId);
         return CollectionUtils.isEmpty(planDetails) ? null : planDetails.get(0);
     }
 
@@ -36,7 +37,11 @@ public class PlanDetailService {
     }
 
     public PlanDetail findByPlanIdLimit1(int planId) {
-        List<PlanDetail> pds = detailDao.findByPlanIdOrderByIdDesc(planId,new PageRequest(0,1));
+        List<PlanDetail> pds = detailDao.findByPlanIdOrderByIdDesc(planId, new PageRequest(0, 1));
         return pds == null || pds.isEmpty() ? null : pds.get(0);
+    }
+
+    public List<PlanDetail> todayKq() {
+        return detailDao.findByCreatedTimeLike(TimeFormatter.format2yyyy_MM_dd(System.currentTimeMillis()));
     }
 }
