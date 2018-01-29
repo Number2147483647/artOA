@@ -33,9 +33,13 @@ public class WxLogin extends BaseController {
 
 
     @RequestMapping("login")
-    public String login(@RequestParam String openid, @RequestParam String validate, ModelMap map) {
+    public String login(String openid, String validate, ModelMap map) {
+        if(StringUtils.isEmpty(openid) || StringUtils.isEmpty(validate)){
+            return "redirect:http://weixin.qdxiaogutou.com/login.php?backUrl=http://art.nanayun.cn/wx/login";
+        }
+
         if (!MD5.encryption(openid + "binghai").equals(validate)) {
-            return "redirect:http://weixin.qdxiaogutou.com/login.php?backUrl=http://art.nanayun.cn:8080/wx/login";
+            return "redirect:http://weixin.qdxiaogutou.com/login.php?backUrl=http://art.nanayun.cn/wx/login";
         }
 
         User user = userService.findByOpenId(openid);

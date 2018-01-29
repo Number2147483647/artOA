@@ -25,7 +25,7 @@ public class UserInter extends HandlerInterceptorAdapter {
         }
         String backUrl = HttpRequestUtils.getRequestFullPath(request);
         session.setAttribute("back",backUrl);
-        response.sendRedirect("http://weixin.qdxiaogutou.com/login.php?backUrl=http://art.nanayun.cn:8080/wx/login");
+        response.sendRedirect("http://weixin.qdxiaogutou.com/login.php?backUrl=http://art.nanayun.cn/wx/login");
         return false;
     }
 }
