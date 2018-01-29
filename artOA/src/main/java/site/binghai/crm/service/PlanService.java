@@ -2,6 +2,7 @@ package site.binghai.crm.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import site.binghai.crm.dao.PlanDao;
 import site.binghai.crm.entity.Plan;
 
@@ -32,5 +33,10 @@ public class PlanService {
 
     public Plan findById(Integer id) {
         return planDao.findOne(id);
+    }
+
+    public Plan findByQrCode(String qrCode) {
+        List<Plan> t = planDao.findByQrPass(qrCode);
+        return CollectionUtils.isEmpty(t) ? null : t.get(0);
     }
 }

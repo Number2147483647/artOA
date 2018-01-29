@@ -85,11 +85,14 @@ public class WxController extends BaseController {
     @RequestMapping("kq")
     @ResponseBody
     public Object kq(@RequestParam Integer planId) {
+        Plan plan = planService.findById(planId);
         User user = (User) getServletRequest().getSession().getAttribute("user");
         if (planDetailService.findByUserIdAndPlanId(user.getId(), planId) == null) {
             PlanDetail planDetail = new PlanDetail(user.getName(), planId, user.getId(), "", TimeFormatter.format(System.currentTimeMillis()), true);
 
             planDetailService.save(planDetail);
+            plan.setNowSize(plan.getNowSize());
+            planService.save(plan);
         } else {
             return fail("你已经打卡了!");
         }

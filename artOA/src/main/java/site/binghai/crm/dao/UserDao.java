@@ -13,4 +13,5 @@ import java.util.List;
 public interface UserDao extends JpaRepository<User,Integer> {
     List<User> findByOpenId(String openId);
     List<User> findByNameAndPhone(String name,String phone);
+    List<User> findByQrCode(String qrCode);
 }

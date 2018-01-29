@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import site.binghai.crm.dao.UserDao;
 import site.binghai.crm.entity.User;
 
@@ -87,5 +88,10 @@ public class UserService {
 
     public User findOne(int userId) {
         return userDao.findOne(userId);
+    }
+
+    public User findByQrCode(String userCode) {
+        List<User> t = userDao.findByQrCode(userCode);
+        return CollectionUtils.isEmpty(t) ? null : t.get(0);
     }
 }
