@@ -12,6 +12,7 @@ import site.binghai.crm.utils.MD5;
 public class Schema {
     private String name;
     private String code;
+    private Object value;
 
     public Schema(String name) {
         this.name = name;

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
 import site.binghai.crm.dao.UserDao;
 import site.binghai.crm.entity.User;
 
@@ -56,6 +57,7 @@ public class UserService {
             logger.error("{}没有找到对应用户，请先绑定", openid);
             return null;
         }
+        users = users.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
         if (users.size() > 1) {
             errLogService.log(this.getClass(), "findByOpenId", openid + "存在多个绑定:" + JSONObject.toJSONString(users));
             logger.error("{}存在多个绑定，错误!{}", openid, users);
@@ -72,6 +74,7 @@ public class UserService {
             logger.error("姓名和电话绑定时没有找到对应用户，请检查数据!{}{}", name, phone);
             return null;
         }
+        users = users.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
         if (users.size() > 1) {
             errLogService.log(this.getClass(), "findByNameAndPhone", "存在多个记录无法绑定" + name + "," + phone + ":" + JSONObject.toJSONString(users));
             logger.error("{},{}存在多个记录，无法绑定!{}", name, phone, users);
@@ -82,16 +85,28 @@ public class UserService {
 
     public List<User> findByUserIds(List<Integer> userIds) {
         List<User> t = userDao.findAll(userIds);
+        t = t.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
         t.sort((a, b) -> b.getId() - a.getId());
         return t;
     }
 
     public User findOne(int userId) {
-        return userDao.findOne(userId);
+        User user = userDao.findOne(userId);
+        return user.isDeleted() ? null : user;
     }
 
     public User findByQrCode(String userCode) {
         List<User> t = userDao.findByQrCode(userCode);
+        t = t.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
         return CollectionUtils.isEmpty(t) ? null : t.get(0);
+    }
+
+    @Transactional
+    public void del(int uid) {
+        User user = findOne(uid);
+        if (user != null && !user.isDeleted()) {
+            user.setDeleted(true);
+            save(user);
+        }
     }
 }

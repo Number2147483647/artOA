@@ -21,6 +21,7 @@ import site.binghai.crm.utils.TimeFormatter;
  */
 @RequestMapping("wx")
 @Controller
+@CrossOrigin(origins = "*")
 public class WxLogin extends BaseController {
 
     @Autowired
@@ -74,7 +75,7 @@ public class WxLogin extends BaseController {
     public Object confirmPlanCode(@RequestParam String qrCode) {
         Plan plan = planService.findByQrCode(qrCode);
 
-        return plan == null ? fail("非法参数") : success(plan, "success");
+        return plan == null ? fail("-1") : success(plan, "success");
     }
 
     @RequestMapping("adminKqByScan")
@@ -83,7 +84,7 @@ public class WxLogin extends BaseController {
         Plan plan = planService.findByQrCode(planCode);
         User user = userService.findByQrCode(userCode);
         if (plan == null || user == null) {
-            return fail("非法参数");
+            return fail("-1");
         }
 
         if (planDetailService.findByUserIdAndPlanId(user.getId(), plan.getId()) == null) {
@@ -94,6 +95,6 @@ public class WxLogin extends BaseController {
             planService.save(plan);
         }
 
-        return success(user, "打卡成功");
+        return success(user, "success");
     }
 }

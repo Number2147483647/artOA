@@ -106,6 +106,10 @@ public class KqController extends BaseController {
         }
 
         User user = userService.findOne(pd.getUserId());
+        if (user == null) {
+            return fail("没有任何人打卡!");
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("<h3>%s</h3>", user.getName()));
         sb.append(String.format("<p>手机号:%s</p>", user.getPhone()));
