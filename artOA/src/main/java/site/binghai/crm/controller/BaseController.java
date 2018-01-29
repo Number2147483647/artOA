@@ -50,6 +50,11 @@ public abstract class BaseController {
         return object;
     }
 
+    public Object jsoupFail(String err, String callback) {
+        callback = callback == null ? "JSOUP" : callback;
+        return callback + "(" + fail(err).toJSONString() + ")";
+    }
+
     public JSONObject success() {
         JSONObject object = new JSONObject();
         object.put("status", "ok");
@@ -61,6 +66,11 @@ public abstract class BaseController {
         object.put("status", "ok");
         object.put("msg", msg);
         return object;
+    }
+
+    public Object jsoupSuccess(Object data, String msg, String callBack) {
+        callBack = callBack == null ? "JSOUP" : callBack;
+        return callBack + "(" + success(data, msg).toJSONString() + ")";
     }
 
     public JSONObject success(Object data, String msg) {

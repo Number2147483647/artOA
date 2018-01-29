@@ -34,7 +34,7 @@ public class WxLogin extends BaseController {
 
     @RequestMapping("login")
     public String login(String openid, String validate, ModelMap map) {
-        if(StringUtils.isEmpty(openid) || StringUtils.isEmpty(validate)){
+        if (StringUtils.isEmpty(openid) || StringUtils.isEmpty(validate)) {
             return "redirect:http://weixin.qdxiaogutou.com/login.php?backUrl=http://art.nanayun.cn/wx/login";
         }
 
@@ -76,19 +76,19 @@ public class WxLogin extends BaseController {
 
     @RequestMapping("confirmPlanCode")
     @ResponseBody
-    public Object confirmPlanCode(@RequestParam String qrCode) {
+    public Object confirmPlanCode(@RequestParam String qrCode, String callback) {
         Plan plan = planService.findByQrCode(qrCode);
 
-        return plan == null ? fail("-1") : success(plan, "success");
+        return plan == null ? jsoupFail("-1", callback) : jsoupSuccess(plan, "success", callback);
     }
 
     @RequestMapping("adminKqByScan")
     @ResponseBody
-    public Object adminKqByScan(@RequestParam String userCode, @RequestParam String planCode, @RequestParam String scanOpenId) {
+    public Object adminKqByScan(@RequestParam String userCode, @RequestParam String planCode, @RequestParam String scanOpenId, String callback) {
         Plan plan = planService.findByQrCode(planCode);
         User user = userService.findByQrCode(userCode);
         if (plan == null || user == null) {
-            return fail("-1");
+            return jsoupFail("-1", callback);
         }
 
         if (planDetailService.findByUserIdAndPlanId(user.getId(), plan.getId()) == null) {
@@ -99,6 +99,6 @@ public class WxLogin extends BaseController {
             planService.save(plan);
         }
 
-        return success(user, "success");
+        return jsoupSuccess(user, "success", callback);
     }
 }

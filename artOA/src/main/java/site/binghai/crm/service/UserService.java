@@ -53,11 +53,14 @@ public class UserService {
 
     public User findByOpenId(String openid) {
         List<User> users = userDao.findByOpenId(openid);
+
+        users = users.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
+
         if (users == null || users.size() == 0) {
             logger.error("{}没有找到对应用户，请先绑定", openid);
             return null;
         }
-        users = users.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
+
         if (users.size() > 1) {
             errLogService.log(this.getClass(), "findByOpenId", openid + "存在多个绑定:" + JSONObject.toJSONString(users));
             logger.error("{}存在多个绑定，错误!{}", openid, users);
@@ -69,12 +72,15 @@ public class UserService {
 
     public User findByNameAndPhone(String name, String phone) {
         List<User> users = userDao.findByNameAndPhone(name, phone);
+
+        users = users.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
+
         if (users == null || users.size() == 0) {
             errLogService.log(this.getClass(), "findByNameAndPhone", "姓名和电话绑定时没有找到对应用户" + name + "," + phone);
             logger.error("姓名和电话绑定时没有找到对应用户，请检查数据!{}{}", name, phone);
             return null;
         }
-        users = users.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
+
         if (users.size() > 1) {
             errLogService.log(this.getClass(), "findByNameAndPhone", "存在多个记录无法绑定" + name + "," + phone + ":" + JSONObject.toJSONString(users));
             logger.error("{},{}存在多个记录，无法绑定!{}", name, phone, users);
