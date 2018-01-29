@@ -113,7 +113,6 @@ public class UserController extends BaseController {
         }
         user.setInfo(values.toJSONString());
         user.setQrCode(UUID.randomUUID().toString());
-        user.setWxBind(false);
         userService.save(user);
 
         if (params.get("userId") != null) {

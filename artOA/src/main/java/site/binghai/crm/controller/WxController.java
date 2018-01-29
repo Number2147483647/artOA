@@ -46,6 +46,9 @@ public class WxController extends BaseController {
         fieldService.findAll();
         List<String> infos = new ArrayList<>();
         User user = (User) getServletRequest().getSession().getAttribute("user");
+        user = userService.findOne(user.getId());
+        getServletRequest().getSession().setAttribute("user",user);
+
         infos.add("姓名:" + user.getName());
         infos.add("手机号:" + user.getPhone());
         JSONObject extra = JSONObject.parseObject(user.getInfo());
