@@ -16,20 +16,22 @@
 <body>
 <div class="page-group">
     <div class="page page-current">
-        <div class="card demo-card-header-pic">
-            <div valign="bottom" class="card-header color-white no-border no-padding">
-                <img class='card-cover' th:src="${'https://wx.nanayun.cn/qrCode?t='+qrCode}" alt="">
-            </div>
-            <div class="card-content">
-                <div class="card-content-inner">
-                    <div th:each="str:${infos}" align="center">
-                        <p th:text="${str}"></p>
+        <div class="page-index">
+            <div class="card demo-card-header-pic">
+                <div valign="bottom" class="card-header color-white no-border no-padding">
+                    <img class='card-cover' th:src="${'https://wx.nanayun.cn/qrCode?t='+qrCode}" alt="">
+                </div>
+                <div class="card-content">
+                    <div class="card-content-inner">
+                        <div th:each="str:${infos}" align="center">
+                            <p th:text="${str}"></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="content-block">
-            <p><a href="javascript:unbind()" class="button button-big">信息解绑</a></p>
+            <div class="content-block">
+                <p><a href="javascript:unbind()" class="button button-big">信息解绑</a></p>
+            </div>
         </div>
     </div>
 </div>
@@ -38,11 +40,11 @@
 <script type='text/javascript' src='http://g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
 <script type='text/javascript' src='http://g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
 <script src="http://s3.mogucdn.com/mlcdn/c45406/171127_3b6b06862307ia661k3bhf910dh50.js"></script>
-<script >
+<script>
     $.init();
     function unbind() {
         $.confirm('你确定解绑吗?', function () {
-            window.location.href="/user/unBind"
+            window.location.href = "/user/unBind"
         });
     }
 </script>

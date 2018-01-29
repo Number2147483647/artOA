@@ -20,22 +20,27 @@
             <h1 class='title'>打卡列表</h1>
         </header>
         <div class="content">
-            <div class="content-block-title" th:text="${notice}"></div>
-            <div class="list-block media-list">
-                <ul>
-                    <li th:each="task:${tasks}">
-                        <a  th:href="${(task.running && task.autoKq && task.deleted())?'javascript:kq('+task.id+')':'javascript:notOk()'}"
-                           class="item-link item-content">
-                            <div class="item-inner">
-                                <div class="item-title-row">
-                                    <div class="item-title" th:text="${task.name}" th:style="${(task.running && task.autoKq && task.deleted())?'color:green':''}">Facebook</div>
-                                    <div class="item-after" th:text="${task.deleted()?'未打卡':'已打卡'}">17:14</div>
+            <div class="page-index">
+                <div class="content-block-title" th:text="${notice}"></div>
+                <div class="list-block media-list">
+                    <ul>
+                        <li th:each="task:${tasks}">
+                            <a th:href="${(task.running && task.autoKq && task.deleted())?'javascript:kq('+task.id+')':'javascript:notOk()'}"
+                               class="item-link item-content">
+                                <div class="item-inner">
+                                    <div class="item-title-row">
+                                        <div class="item-title" th:text="${task.name}"
+                                             th:style="${(task.running && task.autoKq && task.deleted())?'color:green':''}">
+                                            Facebook
+                                        </div>
+                                        <div class="item-after" th:text="${task.deleted()?'未打卡':'已打卡'}">17:14</div>
+                                    </div>
+                                    <div class="item-text" th:text="${task.text}">此处是文本内容...</div>
                                 </div>
-                                <div class="item-text" th:text="${task.text}">此处是文本内容...</div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -47,17 +52,17 @@
 <script src="http://s3.mogucdn.com/mlcdn/c45406/171127_3b6b06862307ia661k3bhf910dh50.js"></script>
 <script>
     $.init();
-    
+
     function notOk() {
         $.alert('你已经打卡或暂不可打卡');
     }
-    
+
     function kq(planId) {
         $.confirm('你确定打卡吗?', function () {
-            $.getJSON('/user/kq?planId='+planId,function (data) {
-                if(data['status'] != 'ok'){
+            $.getJSON('/user/kq?planId=' + planId, function (data) {
+                if (data['status'] != 'ok') {
                     $.alert(data['msg']);
-                }else{
+                } else {
                     $.alert('打卡成功');
                     window.location.reload();
                 }
