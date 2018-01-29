@@ -43,7 +43,7 @@ public class AdminService {
 
 
     public List<Admin> findAll() {
-        List<Admin> all = findAll();
+        List<Admin> all = adminDao.findAll();
         return all.stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
     }
 

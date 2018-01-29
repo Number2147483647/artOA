@@ -51,6 +51,7 @@ public class SysController extends BaseController{
         del.setKiller(killer.getUsername());
         del.setDeleted(true);
 
+        adminService.save(del);
         return "redirect:sys";
     }
 }
