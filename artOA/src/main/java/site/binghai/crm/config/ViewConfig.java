@@ -26,6 +26,7 @@ public class ViewConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/admin/tags.html").setViewName("tags");
         registry.addViewController("/admin/fields.html").setViewName("fields");
         registry.addViewController("/admin/sys.html").setViewName("sys");
+        registry.addViewController("/autoClose").setViewName("autoClose");
         super.addViewControllers(registry);
     }
 }

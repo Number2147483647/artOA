@@ -78,7 +78,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = {"addUser", "saveEditUser"}, method = RequestMethod.POST)
-    public String addUser() {
+    public String addUser(Integer autoClose) {
         Map<String, String> params = HttpRequestUtils.getRequestParamMap(getServletRequest());
         List<Schema> schemas = getSchemas();
         boolean ok = true;
@@ -116,7 +116,11 @@ public class UserController extends BaseController {
         userService.save(user);
 
         if (params.get("userId") != null) {
-            return "redirect:users";
+            if(autoClose != null){
+                return "redirect:/autoClose";
+            }else{
+                return "redirect:users";
+            }
         }
         return "redirect:addUser";
     }
@@ -129,7 +133,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("editUser")
-    public String editUser(@RequestParam int uid, ModelMap map) {
+    public String editUser(@RequestParam int uid, Integer autoClose,ModelMap map) {
         List<Schema> schemas = getSchemas().stream().filter(v -> {
             return !v.getName().equals("微信绑定") && !v.getName().equals("二维码");
         }).collect(Collectors.toList());
@@ -146,6 +150,7 @@ public class UserController extends BaseController {
 
         map.put("schemas", schemas);
         map.put("userId", uid);
+        map.put("autoClose", autoClose != null);
 
         Map<String, String> params = HttpRequestUtils.getRequestParamMap(getServletRequest());
         if (params.get("error") != null) {

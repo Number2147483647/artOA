@@ -1,0 +1,13 @@
+<html>
+<head>
+    <title>主动关闭页面</title>
+</head>
+<body onload='setTimeout(mm,1)'>
+<script>
+    function mm() {
+    window.opener = null;
+    window.close();
+    }
+</script>
+</body>
+</html>

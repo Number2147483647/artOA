@@ -1,5 +1,6 @@
 package site.binghai.crm.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import site.binghai.crm.entity.*;
+import site.binghai.crm.service.FieldService;
 import site.binghai.crm.service.PlanDetailService;
 import site.binghai.crm.service.PlanService;
 import site.binghai.crm.service.UserService;
+import site.binghai.crm.utils.MD5;
 import site.binghai.crm.utils.TimeFormatter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,6 +35,8 @@ public class KqController extends BaseController {
     private PlanService planService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FieldService fieldService;
     @Autowired
     private PlanDetailService planDetailService;
 
@@ -93,6 +99,9 @@ public class KqController extends BaseController {
             return "redirect:kq";
         }
         map.put("plan", plan);
+        List<Schema> schemas = getSchemas();
+        schemas.add(0,new Schema("打卡时间"));
+        map.put("schemas", schemas);
         return "adminKq";
     }
 
@@ -122,10 +131,43 @@ public class KqController extends BaseController {
 
         JSONObject data = new JSONObject();
         data.put("time", pd.getCreatedTime());
-        StringBuilder li = new StringBuilder();
-        planDetails.forEach(v -> li.append(String.format("<li>%s @ %s</li>", v.getUname(), v.getCreatedTime())));
-        data.put("data", li.toString());
 
+        JSONArray bodyInfo = new JSONArray();
+
+        planDetails.forEach(v -> {
+            User ru = userService.findOne(v.getUserId());
+            bodyInfo.add(matchFields(v.getCreatedTime(),ru, schemas));
+        });
+
+        data.put("data", bodyInfo);
         return success(data, sb.toString());
+    }
+
+    private JSONObject matchFields(String createdTime, User user, List<Schema> schemas) {
+        JSONObject object = new JSONObject();
+        object.put("userId", user.getId());
+        List<String> lines = new ArrayList<>();
+        JSONObject info = JSONObject.parseObject(user.getInfo());
+        for (int i = 0; i < schemas.size(); i++) {
+            if (schemas.get(i).getCode().equals(MD5.shortMd5("姓名"))) {
+                lines.add(user.getName());
+            } else if (schemas.get(i).getCode().equals(MD5.shortMd5("手机号"))) {
+                lines.add(user.getPhone());
+            } else {
+                String v = info.getString(schemas.get(i).getCode());
+                lines.add(v == null ? "" : v);
+            }
+        }
+        lines.add(0,createdTime);
+        object.put("lines", lines);
+        return object;
+    }
+
+    public List<Schema> getSchemas() {
+        List<String> schema = new ArrayList<>();
+        schema.add("姓名");
+        schema.add("手机号");
+        schema.addAll(fieldService.findAll().stream().map(v -> v.getName()).collect(Collectors.toList()));
+        return schema.stream().map(v -> new Schema(v)).collect(Collectors.toList());
     }
 }
