@@ -40,6 +40,10 @@ public class KqController extends BaseController {
     private SysCfgService sysCfgService;
     @Autowired
     private WxLogin wxLoginController;
+    @Autowired
+    private RoomRecordService roomRecordService;
+    @Autowired
+    private RoomService roomService;
 
     @RequestMapping("kq")
     public String index(ModelMap map) {
@@ -92,6 +96,20 @@ public class KqController extends BaseController {
             planService.save(plan);
         }
         return "redirect:kq";
+    }
+
+    @RequestMapping("delKqPlanDetail")
+    @ResponseBody
+    public Object delKqPlanDetail(@RequestParam Integer pid) {
+        PlanDetail planDetail = planDetailService.findById(pid);
+        if (planDetail != null) {
+            planDetail.setDeleted(true);
+            planDetailService.save(planDetail);
+
+            List<RoomRecord> ls = roomRecordService.delByPlanDetail(planDetail, getAdmin());
+            ls.forEach(v -> roomService.roomOccupiedRmOne(v.getRoomId()));
+        }
+        return success();
     }
 
     @RequestMapping("kqSwitch")
@@ -149,17 +167,16 @@ public class KqController extends BaseController {
             return fail("empty");
         }
 
-        User user = userService.findOne(pd.getUserId());
-        if (user == null) {
+        if (pd == null) {
             return fail("没有任何人打卡!");
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("<h3>%s</h3>", user.getName()));
-        sb.append(String.format("<p>手机号:%s</p>", user.getPhone()));
+        sb.append(String.format("<h3>%s</h3>", pd.getUname()));
+        sb.append(String.format("<p>手机号:%s</p>", pd.getUphone()));
         List<Schema> schemas = getSchemas();
-        JSONObject info = JSONObject.parseObject(user.getInfo());
-        info.entrySet().forEach(v -> sb.append(String.format("<p>%s:%s</p>", getSchema(v.getKey(), schemas), v.getValue().toString())));
+        JSONObject info = JSONObject.parseObject(pd.getInfo());
+        info.entrySet().forEach(v -> sb.append(String.format("<p>%s : %s</p>", getSchema(v.getKey(), schemas), v.getValue().toString())));
 
         List<PlanDetail> planDetails = planDetailService.findByPlanId(planId);
         planDetails.sort((a, b) -> b.getId() - a.getId());
@@ -195,8 +212,14 @@ public class KqController extends BaseController {
             }
         }
         lines.add(0, planDetail.getCreatedTime());
+        lines.add(getRoom4User(planDetail));
         object.put("lines", lines);
         return object;
+    }
+
+    private String getRoom4User(PlanDetail planDetail) {
+        List<RoomRecord> rs = roomRecordService.findByPlanDetail(planDetail);
+        return rs == null ? "" : rs.get(0).getRoomName();
     }
 
     public List<Schema> getSchemas() {

@@ -4,6 +4,7 @@ import lombok.Data;
 import site.binghai.crm.utils.TimeFormatter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -15,15 +16,17 @@ import javax.persistence.Id;
 @Entity
 public class RoomRecord {
     @Id
+    @GeneratedValue
     private int id;
     private int planDetailId;
     private int roomId;
-    private boolean deleted;
+    private String roomName;
+    private boolean deleted = false;
     private String killer;
     private String created;
 
-    public RoomRecord(int id, int planDetailId, int roomId) {
-        this.id = id;
+    public RoomRecord(String roomName, int planDetailId, int roomId) {
+        this.roomName = roomName;
         this.planDetailId = planDetailId;
         this.roomId = roomId;
         this.deleted = false;

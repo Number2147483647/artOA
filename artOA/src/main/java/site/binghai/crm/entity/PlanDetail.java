@@ -28,6 +28,7 @@ public class PlanDetail {
     @Transient
     private String room;
     private String info;
+    private boolean deleted;
     private boolean autoKq; // 自助考勤
 
     public PlanDetail(String uname, String uphone, String info, int planId, int userId, String scanOpenId, String createdTime, boolean autoKq) {

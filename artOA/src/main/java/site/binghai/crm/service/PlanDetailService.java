@@ -10,6 +10,7 @@ import site.binghai.crm.utils.TimeFormatter;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by binghai on 2018/1/28.
@@ -23,7 +24,8 @@ public class PlanDetailService {
 
 
     public PlanDetail findByUserIdAndPlanId(int userId, int planId) {
-        List<PlanDetail> planDetails = detailDao.findByUserIdAndPlanId(userId, planId);
+        List<PlanDetail> planDetails = detailDao.findByUserIdAndPlanId(userId, planId)
+                .stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
         return CollectionUtils.isEmpty(planDetails) ? null : planDetails.get(0);
     }
 
@@ -33,19 +35,22 @@ public class PlanDetailService {
     }
 
     public List<PlanDetail> findByPlanId(int planId) {
-        return detailDao.findByPlanId(planId);
+        return detailDao.findByPlanId(planId)
+                .stream().filter(v -> !v.isDeleted())
+                .collect(Collectors.toList());
     }
 
     public PlanDetail findByPlanIdLimit1(int planId) {
-        List<PlanDetail> pds = detailDao.findByPlanIdOrderByIdDesc(planId, new PageRequest(0, 1));
+        List<PlanDetail> pds = detailDao.findByPlanIdAndDeletedOrderByIdDesc(planId,false, new PageRequest(0, 1));
         return pds == null || pds.isEmpty() ? null : pds.get(0);
     }
 
     public List<PlanDetail> todayKq() {
-        return detailDao.findByCreatedTimeLike(TimeFormatter.format2yyyy_MM_dd(System.currentTimeMillis()));
+        return detailDao.findByCreatedTimeLike(TimeFormatter.format2yyyy_MM_dd(System.currentTimeMillis())).stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
     }
 
     public PlanDetail findById(int planDetailId) {
-        return detailDao.findOne(planDetailId);
+        PlanDetail pd = detailDao.findOne(planDetailId);
+        return pd.isDeleted() ? null : pd;
     }
 }

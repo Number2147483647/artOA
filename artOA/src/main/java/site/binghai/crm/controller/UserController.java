@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import site.binghai.crm.entity.PlanDetail;
-import site.binghai.crm.entity.Schema;
-import site.binghai.crm.entity.User;
+import site.binghai.crm.entity.*;
 import site.binghai.crm.service.FieldService;
 import site.binghai.crm.service.PlanDetailService;
+import site.binghai.crm.service.RoomService;
 import site.binghai.crm.service.UserService;
 import site.binghai.crm.utils.HttpRequestUtils;
 import site.binghai.crm.utils.MD5;
@@ -36,6 +35,8 @@ public class UserController extends BaseController {
     private PlanDetailService planDetailService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoomService roomService;
 
     @RequestMapping("users")
     public String users(String anySearch, ModelMap map) {
@@ -86,17 +87,17 @@ public class UserController extends BaseController {
         Map<String, String> params = HttpRequestUtils.getRequestParamMap(getServletRequest());
         List<Schema> schemas = getSchemas();
         if (params.get("pid") != null && Integer.parseInt(params.get("pid")) > 0) {
-            return planDetailEditSave(params,schemas);
+            return planDetailEditSave(params, schemas);
         } else {
-            return userSaveOrEditSave(params,schemas,autoClose);
+            return userSaveOrEditSave(params, schemas, autoClose);
         }
     }
 
-    private String userSaveOrEditSave(Map<String, String> params, List<Schema> schemas, Integer autoClose){
+    private String userSaveOrEditSave(Map<String, String> params, List<Schema> schemas, Integer autoClose) {
         User user = null;
-        if(params.get("userId") != null){
+        if (params.get("userId") != null) {
             user = userService.findOne(Integer.parseInt(params.get("userId")));
-        }else{
+        } else {
             user = new User();
             user.setQrCode(UUID.randomUUID().toString());
         }
@@ -138,7 +139,7 @@ public class UserController extends BaseController {
         return "redirect:addUser";
     }
 
-    private String planDetailEditSave(Map<String, String> params, List<Schema> schemas){
+    private String planDetailEditSave(Map<String, String> params, List<Schema> schemas) {
         int planDetailId = Integer.parseInt(params.get("pid"));
         PlanDetail planDetail = planDetailService.findById(planDetailId);
         boolean ok = true;
@@ -160,11 +161,19 @@ public class UserController extends BaseController {
         }
 
         if (!ok) {
-            return "redirect:editUser?error=1&autoClose=1&uid=" + planDetail.getUserId()+"&pid="+planDetail.getPlanId();
+            return "redirect:editUser?error=1&autoClose=1&uid=" + planDetail.getUserId() + "&pid=" + planDetail.getPlanId();
         }
         planDetail.setInfo(values.toJSONString());
         planDetailService.save(planDetail);
 
+        if(params.get("room") != null && params.get("room").length() > 0){
+            Integer roomId = Integer.parseInt(params.get("room"));
+            boolean res = roomService.matchPlanDetailAndRoom(planDetail, roomId, getAdmin());
+
+            if (!res) {
+                return "redirect:editUser?autoClose=1&err=2&uid=" + params.get("userId") + "&pid=" + planDetailId;
+            }
+        }
         return "redirect:/autoClose";
     }
 
@@ -176,16 +185,33 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("editUser")
-    public String editUser(@RequestParam int uid, Integer autoClose, Integer pid, ModelMap map) {
+    public String editUser(@RequestParam int uid, Integer autoClose, Integer pid, Integer err, ModelMap map) {
         List<Schema> schemas = getSchemas().stream().filter(v -> {
             return !v.getName().equals("微信绑定") && !v.getName().equals("二维码");
         }).collect(Collectors.toList());
+        JSONObject info = null;
+        if (pid != null) {
+            PlanDetail planDetail = planDetailService.findById(pid);
+            info = JSONObject.parseObject(planDetail.getInfo());
+            info.put(MD5.shortMd5("姓名"), planDetail.getUname());
+            info.put(MD5.shortMd5("手机号"), planDetail.getUphone());
 
-        User user = userService.findOne(uid);
-
-        JSONObject info = JSONObject.parseObject(user.getInfo());
-        info.put(MD5.shortMd5("姓名"), user.getName());
-        info.put(MD5.shortMd5("手机号"), user.getPhone());
+            List<Room> rooms = roomService.getUnFullRoomList(planDetail.getPlanId());
+            Room room = roomService.findRoomByPlanDetailId(planDetail);
+            if(room != null){
+                rooms.add(0,room);
+            }
+            map.put("rooms", rooms);
+            map.put("errMsg", rooms.size() == 0 ? "没有可以分配的房间..." : "");
+            if (err != null && err == 2) {
+                map.put("errMsg", "分配房间时出现错误!可能房间分配并没有变化.");
+            }
+        } else {
+            User user = userService.findOne(uid);
+            info = JSONObject.parseObject(user.getInfo());
+            info.put(MD5.shortMd5("姓名"), user.getName());
+            info.put(MD5.shortMd5("手机号"), user.getPhone());
+        }
 
         for (int i = 0; i < schemas.size(); i++) {
             schemas.get(i).setValue(info.get(schemas.get(i).getCode()));
@@ -200,8 +226,6 @@ public class UserController extends BaseController {
         if (params.get("error") != null) {
             map.put("errMsg", "保存过程中发生错误");
         }
-
-
-        return "editUser";
+        return pid != null ? "editPlanDetail" : "editUser";
     }
 }
