@@ -152,6 +152,11 @@
                                 <div class="clearfix"></div>
                                 <hr>
                                 <ul class="social-links list-inline">
+                                    <li>
+                                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips"
+                                           th:href="${'javascript:delKq('+one.id+')'}"
+                                           data-original-title="考勤删除"><i class="fa fa-trash"></i></a>
+                                    </li>
                                     <li th:if="${one.running}">
                                         <a title="" data-placement="top" data-toggle="tooltip" class="tooltips"
                                            th:href="${'javascript:stopKq('+one.id+')'}"
@@ -222,12 +227,23 @@
 <script src="/plugins/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
-        $('.counter').counterUp({
-            delay: 100,
-            time: 1200
-        });
+
     });
 
+    function delKq(planId) {
+        swal({
+            title: "你确定删除这个打卡计划吗?",
+            text: "删除后连同数据都将无法恢复!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "我决定删除",
+            cancelButtonText:"不删除",
+            closeOnConfirm: false
+        }, function(){
+            window.location.href="delKq?id="+planId;
+        });
+    }
     function stopKq(planId) {
         swal({
             title: "你确定关闭此次打卡计划吗?",

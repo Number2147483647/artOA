@@ -28,6 +28,7 @@ public class PlanService {
 
     public List<Plan> all() {
         return planDao.findAll().stream()
+                .filter(v -> !v.isDeleted())
                 .sorted((a, b) -> b.getId() - a.getId()).collect(Collectors.toList());
     }
 

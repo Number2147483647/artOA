@@ -92,7 +92,7 @@ public class WxLogin extends BaseController {
         }
 
         if (planDetailService.findByUserIdAndPlanId(user.getId(), plan.getId()) == null) {
-            PlanDetail planDetail = new PlanDetail(user.getName(), plan.getId(), user.getId(), scanOpenId, TimeFormatter.format(System.currentTimeMillis()), false);
+            PlanDetail planDetail = new PlanDetail(user.getName(), user.getPhone(), user.getInfo(), plan.getId(), user.getId(), scanOpenId, TimeFormatter.format(System.currentTimeMillis()), false);
 
             planDetailService.save(planDetail);
             plan.setNowSize(plan.getNowSize());

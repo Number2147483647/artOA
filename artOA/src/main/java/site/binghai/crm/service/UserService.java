@@ -115,4 +115,20 @@ public class UserService {
             save(user);
         }
     }
+
+    public User findByName(String name) throws Exception {
+        List<User> users = findAll().stream()
+                .filter(v -> !v.isDeleted())
+                .filter(v -> v.getName().equals(name)).collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(users)) {
+            throw new Exception("用户不存在!");
+        }
+
+        if (users.size() > 1) {
+            throw new Exception("存在同名用户，请扫码打卡!");
+        }
+
+        return users.get(0);
+    }
 }

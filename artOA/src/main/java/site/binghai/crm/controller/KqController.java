@@ -5,16 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import site.binghai.crm.entity.*;
-import site.binghai.crm.service.FieldService;
-import site.binghai.crm.service.PlanDetailService;
-import site.binghai.crm.service.PlanService;
-import site.binghai.crm.service.UserService;
+import site.binghai.crm.service.*;
 import site.binghai.crm.utils.MD5;
 import site.binghai.crm.utils.TimeFormatter;
 
@@ -39,6 +36,10 @@ public class KqController extends BaseController {
     private FieldService fieldService;
     @Autowired
     private PlanDetailService planDetailService;
+    @Autowired
+    private SysCfgService sysCfgService;
+    @Autowired
+    private WxLogin wxLoginController;
 
     @RequestMapping("kq")
     public String index(ModelMap map) {
@@ -82,6 +83,17 @@ public class KqController extends BaseController {
         return "redirect:kq";
     }
 
+    @RequestMapping("delKq")
+    public String delKq(@RequestParam Integer id) {
+        Plan plan = planService.findById(id);
+        if (plan != null) {
+            plan.setRunning(false);
+            plan.setDeleted(true);
+            planService.save(plan);
+        }
+        return "redirect:kq";
+    }
+
     @RequestMapping("kqSwitch")
     public String kqSwitch(@RequestParam Integer id) {
         Plan plan = planService.findById(id);
@@ -100,9 +112,32 @@ public class KqController extends BaseController {
         }
         map.put("plan", plan);
         List<Schema> schemas = getSchemas();
-        schemas.add(0,new Schema("打卡时间"));
+        schemas.add(0, new Schema("打卡时间"));
         map.put("schemas", schemas);
+        map.put("adminDebug", sysCfgService.adminDebugOpen());
         return "adminKq";
+    }
+
+    @RequestMapping("adminDebug")
+    @ResponseBody
+    public Object adminDebug(@RequestParam String name, @RequestParam String planCode) {
+        if (StringUtils.isEmpty(name)) {
+            return fail("请输入名字!");
+        }
+        User user = null;
+        try {
+            user = userService.findByName(name);
+        } catch (Exception e) {
+            return fail(e.getMessage());
+        }
+
+        Admin admin = (Admin) getServletRequest().getSession().getAttribute("admin");
+        Object resp = wxLoginController.adminKqByScan(user.getQrCode(), planCode, admin.getUsername() + ":" + admin.getPhone(), null);
+        JSONObject json = JSONObject.parseObject(resp.toString());
+        if (!json.getString("status").equals("ok")) {
+            return fail("打卡失败，原因未知，请采用扫码打卡!");
+        }
+        return success("处理成功");
     }
 
 
@@ -136,29 +171,29 @@ public class KqController extends BaseController {
 
         planDetails.forEach(v -> {
             User ru = userService.findOne(v.getUserId());
-            bodyInfo.add(matchFields(v.getCreatedTime(),ru, schemas));
+            bodyInfo.add(matchFields(v, schemas));
         });
 
         data.put("data", bodyInfo);
         return success(data, sb.toString());
     }
 
-    private JSONObject matchFields(String createdTime, User user, List<Schema> schemas) {
+    private JSONObject matchFields(PlanDetail planDetail, List<Schema> schemas) {
         JSONObject object = new JSONObject();
-        object.put("userId", user.getId());
+        object.put("userId", planDetail.getUserId());
         List<String> lines = new ArrayList<>();
-        JSONObject info = JSONObject.parseObject(user.getInfo());
+        JSONObject info = JSONObject.parseObject(planDetail.getInfo());
         for (int i = 0; i < schemas.size(); i++) {
             if (schemas.get(i).getCode().equals(MD5.shortMd5("姓名"))) {
-                lines.add(user.getName());
+                lines.add(planDetail.getUname());
             } else if (schemas.get(i).getCode().equals(MD5.shortMd5("手机号"))) {
-                lines.add(user.getPhone());
+                lines.add(planDetail.getUphone());
             } else {
                 String v = info.getString(schemas.get(i).getCode());
                 lines.add(v == null ? "" : v);
             }
         }
-        lines.add(0,createdTime);
+        lines.add(0, planDetail.getCreatedTime());
         object.put("lines", lines);
         return object;
     }

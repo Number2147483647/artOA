@@ -8,7 +8,8 @@ import javax.persistence.Id;
 
 /**
  * Created by binghai on 2018/1/22.
- *  考勤细节
+ * 考勤细节
+ *
  * @ artOA
  */
 @Data
@@ -20,11 +21,15 @@ public class PlanDetail {
     private int planId;
     private int userId;
     private String uname;
+    private String uphone;
     private String scanOpenId; // 扫描者openId
     private String createdTime;
+    private String info;
     private boolean autoKq; // 自助考勤
 
-    public PlanDetail(String uname,int planId, int userId, String scanOpenId, String createdTime, boolean autoKq) {
+    public PlanDetail(String uname, String uphone, String info, int planId, int userId, String scanOpenId, String createdTime, boolean autoKq) {
+        this.info = info;
+        this.uphone = uphone;
         this.uname = uname;
         this.planId = planId;
         this.userId = userId;

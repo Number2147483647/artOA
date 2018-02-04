@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -51,7 +52,9 @@ public abstract class BaseController {
     }
 
     public Object jsoupFail(String err, String callback) {
-        callback = callback == null ? "JSOUP" : callback;
+        if(StringUtils.isEmpty(callback)){
+            return fail(err);
+        }
         return callback + "(" + fail(err).toJSONString() + ")";
     }
 
@@ -69,7 +72,10 @@ public abstract class BaseController {
     }
 
     public Object jsoupSuccess(Object data, String msg, String callBack) {
-        callBack = callBack == null ? "JSOUP" : callBack;
+        if(StringUtils.isEmpty(callBack)){
+            return success(data, msg);
+        }
+        callBack = callBack == null ? "" : callBack;
         return callBack + "(" + success(data, msg).toJSONString() + ")";
     }
 

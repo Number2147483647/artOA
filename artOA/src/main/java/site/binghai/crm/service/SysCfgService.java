@@ -25,4 +25,10 @@ public class SysCfgService {
         long days = howlong/86400000;
         return days;
     }
+
+    public boolean adminDebugOpen(){
+        List<SysCfg> cfgs = dao.findAll();
+        SysCfg cfg = cfgs.get(0);
+        return cfg.isAdminDebug();
+    }
 }

@@ -17,5 +17,6 @@ public class SysCfg {
     @Id
     @GeneratedValue
     private int id;
+    private boolean adminDebug; // 管理代打卡开关
     private long startUpTime; //系统启动时间
 }

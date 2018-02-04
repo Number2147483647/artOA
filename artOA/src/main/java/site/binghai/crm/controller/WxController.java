@@ -91,7 +91,7 @@ public class WxController extends BaseController {
         Plan plan = planService.findById(planId);
         User user = (User) getServletRequest().getSession().getAttribute("user");
         if (planDetailService.findByUserIdAndPlanId(user.getId(), planId) == null) {
-            PlanDetail planDetail = new PlanDetail(user.getName(), planId, user.getId(), "", TimeFormatter.format(System.currentTimeMillis()), true);
+            PlanDetail planDetail = new PlanDetail(user.getName(),user.getPhone(),user.getInfo(), planId, user.getId(), "", TimeFormatter.format(System.currentTimeMillis()), true);
 
             planDetailService.save(planDetail);
             plan.setNowSize(plan.getNowSize());
