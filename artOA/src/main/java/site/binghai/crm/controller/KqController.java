@@ -181,6 +181,7 @@ public class KqController extends BaseController {
     private JSONObject matchFields(PlanDetail planDetail, List<Schema> schemas) {
         JSONObject object = new JSONObject();
         object.put("userId", planDetail.getUserId());
+        object.put("pid", planDetail.getId());
         List<String> lines = new ArrayList<>();
         JSONObject info = JSONObject.parseObject(planDetail.getInfo());
         for (int i = 0; i < schemas.size(); i++) {

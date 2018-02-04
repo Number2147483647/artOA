@@ -172,6 +172,13 @@
                                                         </span>
                                                     </div>
                                                 </div>
+                                                <div class="about-info-p m-b-0">
+                                                    <strong>房间管理</strong>
+                                                    <br>
+                                                    <a th:href="${'roomManage?planId='+plan.id}">
+                                                        <button type="button" class="btn btn-warning waves-effect waves-light m-b-5">房间管理</button>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                         <!-- Personal-Information -->
@@ -263,7 +270,7 @@
         <td><span>{{:#data}}</span></td>
         {{/for}}
         <td>
-            <a href="/admin/editUser?uid={{:userId}}&autoClose=1" target="_blank">
+            <a href="/admin/editUser?uid={{:userId}}&autoClose=1&pid={{:pid}}" target="_blank">
             <button class="btn btn-info" ><i class="fa fa-edit"></i> <span>编辑</span>
             </a>
             </button>

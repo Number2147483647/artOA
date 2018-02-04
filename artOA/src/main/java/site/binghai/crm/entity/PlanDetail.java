@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 /**
  * Created by binghai on 2018/1/22.
@@ -24,6 +25,8 @@ public class PlanDetail {
     private String uphone;
     private String scanOpenId; // 扫描者openId
     private String createdTime;
+    @Transient
+    private String room;
     private String info;
     private boolean autoKq; // 自助考勤
 

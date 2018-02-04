@@ -44,4 +44,8 @@ public class PlanDetailService {
     public List<PlanDetail> todayKq() {
         return detailDao.findByCreatedTimeLike(TimeFormatter.format2yyyy_MM_dd(System.currentTimeMillis()));
     }
+
+    public PlanDetail findById(int planDetailId) {
+        return detailDao.findOne(planDetailId);
+    }
 }

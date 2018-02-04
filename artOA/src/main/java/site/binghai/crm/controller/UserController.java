@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import site.binghai.crm.entity.PlanDetail;
 import site.binghai.crm.entity.Schema;
 import site.binghai.crm.entity.User;
 import site.binghai.crm.service.FieldService;
+import site.binghai.crm.service.PlanDetailService;
 import site.binghai.crm.service.UserService;
 import site.binghai.crm.utils.HttpRequestUtils;
 import site.binghai.crm.utils.MD5;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("admin")
 public class UserController extends BaseController {
+    @Autowired
+    private PlanDetailService planDetailService;
     @Autowired
     private UserService userService;
 
@@ -81,14 +85,24 @@ public class UserController extends BaseController {
     public String addUser(Integer autoClose) {
         Map<String, String> params = HttpRequestUtils.getRequestParamMap(getServletRequest());
         List<Schema> schemas = getSchemas();
-        boolean ok = true;
-        User user = null;
-        if (params.get("userId") != null) {
-            user = userService.findOne(Integer.parseInt(params.get("userId")));
+        if (params.get("pid") != null && Integer.parseInt(params.get("pid")) > 0) {
+            return planDetailEditSave(params,schemas);
         } else {
+            return userSaveOrEditSave(params,schemas,autoClose);
+        }
+    }
+
+    private String userSaveOrEditSave(Map<String, String> params, List<Schema> schemas, Integer autoClose){
+        User user = null;
+        if(params.get("userId") != null){
+            user = userService.findOne(Integer.parseInt(params.get("userId")));
+        }else{
             user = new User();
+            user.setQrCode(UUID.randomUUID().toString());
         }
         JSONObject values = new JSONObject();
+        boolean ok = true;
+
         for (Schema schema : schemas) {
             if (!ok || schema.getName().equals("微信绑定") || schema.getName().equals("二维码")) {
                 continue;
@@ -112,17 +126,46 @@ public class UserController extends BaseController {
             return "redirect:addUser?error=1";
         }
         user.setInfo(values.toJSONString());
-        user.setQrCode(UUID.randomUUID().toString());
         userService.save(user);
 
         if (params.get("userId") != null) {
-            if(autoClose != null){
+            if (autoClose != null) {
                 return "redirect:/autoClose";
-            }else{
+            } else {
                 return "redirect:users";
             }
         }
         return "redirect:addUser";
+    }
+
+    private String planDetailEditSave(Map<String, String> params, List<Schema> schemas){
+        int planDetailId = Integer.parseInt(params.get("pid"));
+        PlanDetail planDetail = planDetailService.findById(planDetailId);
+        boolean ok = true;
+        JSONObject values = new JSONObject();
+        for (Schema schema : schemas) {
+            if (!ok || schema.getName().equals("微信绑定") || schema.getName().equals("二维码")) {
+                continue;
+            }
+            if (params.get(schema.getCode()) == null) {
+                ok = false;
+            }
+            if (schema.getName().equals("姓名")) {
+                planDetail.setUname(params.get(schema.getCode()));
+            } else if (schema.getName().equals("手机号")) {
+                planDetail.setUphone(params.get(schema.getCode()));
+            } else {
+                values.put(schema.getCode(), params.get(schema.getCode()));
+            }
+        }
+
+        if (!ok) {
+            return "redirect:editUser?error=1&autoClose=1&uid=" + planDetail.getUserId()+"&pid="+planDetail.getPlanId();
+        }
+        planDetail.setInfo(values.toJSONString());
+        planDetailService.save(planDetail);
+
+        return "redirect:/autoClose";
     }
 
 
@@ -133,7 +176,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("editUser")
-    public String editUser(@RequestParam int uid, Integer autoClose,ModelMap map) {
+    public String editUser(@RequestParam int uid, Integer autoClose, Integer pid, ModelMap map) {
         List<Schema> schemas = getSchemas().stream().filter(v -> {
             return !v.getName().equals("微信绑定") && !v.getName().equals("二维码");
         }).collect(Collectors.toList());
@@ -151,6 +194,7 @@ public class UserController extends BaseController {
         map.put("schemas", schemas);
         map.put("userId", uid);
         map.put("autoClose", autoClose != null);
+        map.put("pid", pid != null ? pid : -1);
 
         Map<String, String> params = HttpRequestUtils.getRequestParamMap(getServletRequest());
         if (params.get("error") != null) {

@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import site.binghai.crm.entity.Admin;
 import site.binghai.crm.entity.Fields;
 import site.binghai.crm.entity.Schema;
 import site.binghai.crm.service.AdminService;
@@ -43,6 +44,9 @@ public abstract class BaseController {
         return null;
     }
 
+    public Admin getAdmin(){
+        return (Admin) getServletRequest().getSession().getAttribute("admin");
+    }
 
     public JSONObject fail(String err) {
         JSONObject object = new JSONObject();
