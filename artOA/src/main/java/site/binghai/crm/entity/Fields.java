@@ -20,5 +20,6 @@ public class Fields {
     private String name;
     private String created;
     private String owner;
+    private boolean extendField;
     private boolean isDeleted;
 }

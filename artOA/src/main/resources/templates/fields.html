@@ -56,7 +56,7 @@
         <!-- LOGO -->
         <div class="topbar-left">
             <div class="text-center">
-                <a href="/admin/index" class="logo"><i class="md md-terrain"></i> <span>系统名称自定义 </span></a>
+                <a href="/admin/index" class="logo"><i class="md md-terrain"></i> <span>985艺考服务系统 </span></a>
             </div>
         </div>
         <!-- Button mobile view to collapse sidebar menu -->
@@ -143,17 +143,30 @@
 
                 <div class="panel">
                     <div class="panel-body">
-
                         <div class="col-md-12">
-                            <div class="input-group m-t-10">
-                                <span id="errMsg" style="color:red"></span>
-                                <input type="text" class="form-control" id="nameField"
-                                       placeholder="输入字段名然后点击添加，但注意字段名不可重复!">
-                                <span class="input-group-btn">
-                                                        <button type="button" onclick="addNew()"
-                                                                class="btn waves-effect waves-light btn-primary">添加</button>
-                                                        </span>
-                            </div>
+                            <span id="errMsg" style="color:red"></span>
+                        </div>
+                        <div class="form">
+                            <form action="#" class="cmxform form-horizontal tasi-form" id="commentForm" method="post" novalidate="novalidate">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2">字段名称</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" id="nameField"
+                                               placeholder="输入字段名然后点击添加，但注意字段名不可重复!">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2">仅考勤显示</label>
+                                    <div class="col-lg-10">
+                                        <input name="extendField" type="checkbox" id="extendFieldId">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        <button class="btn btn-success waves-effect waves-light" type="button" onclick="addNew()">新增字段</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
@@ -176,6 +189,7 @@
                                 <th>序号</th>
                                 <th>字段名(中文)</th>
                                 <th>添加人</th>
+                                <th>仅考勤显示</th>
                                 <th>添加时间</th>
                             </tr>
                             </thead>
@@ -185,6 +199,7 @@
                                 <td th:text="${f.id}">1</td>
                                 <td th:text="${f.name}">身份证号</td>
                                 <td th:text="${f.owner}">张三</td>
+                                <td th:text="${f.extendField?'是':''}">张三</td>
                                 <td th:text="${f.created}">2018-1-1 10:10:10</td>
                             </tr>
                             </tbody>
@@ -206,32 +221,6 @@
     <!-- End Right content here -->
     <!-- ============================================================== -->
 
-
-    <!-- MODAL -->
-    <div id="dialog" class="modal-block mfp-hide">
-        <section class="panel panel-info panel-color">
-            <header class="panel-heading">
-                <h2 class="panel-title">确定删除?</h2>
-            </header>
-            <div class="panel-body">
-                <div class="modal-wrapper">
-                    <div class="modal-text">
-                        <p>你确定要删除这行数据吗?</p>
-                    </div>
-                </div>
-
-                <div class="row m-t-20">
-                    <div class="col-md-12 text-right">
-                        <button id="dialogConfirm" class="btn btn-primary waves-effect waves-light">确定</button>
-                        <button id="dialogCancel" class="btn btn-default waves-effect">取消</button>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-    </div>
-
-    <!-- end Modal -->
 </div>
 <!-- END wrapper -->
 
@@ -294,7 +283,8 @@
     });
 
     function addNew() {
-        $.post('/admin/addField', {'addField': $("#nameField").val()}, function (data) {
+        $.post('/admin/addField', {'addField': $("#nameField").val(),
+            'extendField':$("#extendFieldId").is(":checked")}, function (data) {
             if (data['status'] != 'ok') {
                 $("#errMsg").text(data['msg']);
             } else {

@@ -44,7 +44,7 @@ public abstract class BaseController {
         return null;
     }
 
-    public Admin getAdmin(){
+    public Admin getAdmin() {
         return (Admin) getServletRequest().getSession().getAttribute("admin");
     }
 
@@ -56,7 +56,7 @@ public abstract class BaseController {
     }
 
     public Object jsoupFail(String err, String callback) {
-        if(StringUtils.isEmpty(callback)){
+        if (StringUtils.isEmpty(callback)) {
             return fail(err);
         }
         return callback + "(" + fail(err).toJSONString() + ")";
@@ -76,7 +76,7 @@ public abstract class BaseController {
     }
 
     public Object jsoupSuccess(Object data, String msg, String callBack) {
-        if(StringUtils.isEmpty(callBack)){
+        if (StringUtils.isEmpty(callBack)) {
             return success(data, msg);
         }
         callBack = callBack == null ? "" : callBack;
@@ -92,13 +92,13 @@ public abstract class BaseController {
     }
 
     public List<Schema> getSchemas() {
-        List<String> schema = new ArrayList<>();
-        schema.add("姓名");
-        schema.add("手机号");
-        schema.addAll(fieldService.findAll().stream().map(v -> v.getName()).collect(Collectors.toList()));
-        schema.add("微信绑定");
-        schema.add("二维码");
-        return schema.stream().map(v -> new Schema(v)).collect(Collectors.toList());
+        List<Schema> schema = new ArrayList<>();
+        schema.add(new Schema("姓名"));
+        schema.add(new Schema("手机号"));
+        schema.addAll(fieldService.findAll().stream().map(v -> new Schema(v.getName(), v.isExtendField())).collect(Collectors.toList()));
+        schema.add(new Schema("微信绑定"));
+        schema.add(new Schema("二维码"));
+        return schema;
     }
 
     public String getField(String key, List<Fields> fields) {

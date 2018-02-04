@@ -42,7 +42,10 @@ public class UserController extends BaseController {
     public String users(String anySearch, ModelMap map) {
         List<User> users = StringUtils.isEmpty(anySearch) ? userService.findAll() : userService.filter(anySearch);
         List<JSONObject> infos = new ArrayList<>();
-        List<Schema> schemas = getSchemas();
+        List<Schema> schemas = getSchemas()
+                .stream()
+                .filter(v -> !v.isExtendField())
+                .collect(Collectors.toList());
         schemas.remove(schemas.size() - 1);
         schemas.remove(schemas.size() - 1);
 

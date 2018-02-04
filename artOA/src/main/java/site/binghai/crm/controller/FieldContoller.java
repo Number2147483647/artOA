@@ -32,7 +32,7 @@ public class FieldContoller extends BaseController {
 
     @RequestMapping(value = "addField", method = RequestMethod.POST)
     @ResponseBody
-    public Object addField(@RequestParam String addField) {
+    public Object addField(@RequestParam String addField,@RequestParam boolean extendField) {
         if (StringUtils.isEmpty(addField)) {
             return fail("输入有误!");
         }
@@ -43,6 +43,7 @@ public class FieldContoller extends BaseController {
         fields.setCreated(TimeFormatter.format(System.currentTimeMillis()));
         fields.setDeleted(false);
         fields.setName(addField);
+        fields.setExtendField(extendField);
         Admin admin = (Admin) getServletRequest().getSession().getAttribute("admin");
         fields.setOwner(admin.getUsername());
 
