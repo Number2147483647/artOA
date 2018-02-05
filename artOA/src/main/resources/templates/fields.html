@@ -196,6 +196,7 @@
                                 <th>字段名(中文)</th>
                                 <th>添加人</th>
                                 <th>仅考勤显示</th>
+                                <th>对用户不可见</th>
                                 <th>添加时间</th>
                             </tr>
                             </thead>
@@ -206,6 +207,7 @@
                                 <td th:text="${f.name}">身份证号</td>
                                 <td th:text="${f.owner}">张三</td>
                                 <td th:text="${f.extendField?'是':''}">张三</td>
+                                <td th:text="${f.notVisible4User?'是':''}">张三</td>
                                 <td th:text="${f.created}">2018-1-1 10:10:10</td>
                             </tr>
                             </tbody>
