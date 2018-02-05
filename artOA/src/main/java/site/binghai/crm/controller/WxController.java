@@ -40,19 +40,46 @@ public class WxController extends BaseController {
     private PlanDetailService planDetailService;
 
     @RequestMapping("myInfo")
-    public String myInfo(ModelMap map) {
-        List<Fields> fields = fieldService.findAll();
-
-        fieldService.findAll();
+    public String myInfo(ModelMap map, Integer pid) {
+        if (pid != null) {
+            return planDetailInfo(map, pid);
+        }
         List<String> infos = new ArrayList<>();
         User user = (User) getServletRequest().getSession().getAttribute("user");
         user = userService.findOne(user.getId());
-        getServletRequest().getSession().setAttribute("user",user);
+        getServletRequest().getSession().setAttribute("user", user);
 
         infos.add("姓名:" + user.getName());
         infos.add("手机号:" + user.getPhone());
         JSONObject extra = JSONObject.parseObject(user.getInfo());
-        extra.entrySet().forEach(v -> infos.add(getField(v.getKey(), fields) + ":" + v.getValue().toString()));
+        getSchemas().stream().filter(v -> !v.isNotVisible4User()).forEach(v -> {
+            if (extra.get(v.getCode()) != null) {
+                infos.add(v.getName() + ":" + extra.get(v.getCode()));
+            }
+        });
+//        extra.entrySet().forEach(v -> infos.add(getField(v.getKey(), fields) + ":" + v.getValue().toString()));
+        map.put("infos", infos);
+        map.put("qrCode", user.getQrCode());
+        return "userLogin";
+    }
+
+    private String planDetailInfo(ModelMap map, Integer pid) {
+        List<String> infos = new ArrayList<>();
+        PlanDetail planDetail = planDetailService.findById(pid);
+        if (planDetail == null) {
+            return "/autoClose";
+        }
+        User user = (User) getServletRequest().getSession().getAttribute("user");
+
+        infos.add("姓名:" + planDetail.getUname());
+        infos.add("手机号:" + planDetail.getUphone());
+        JSONObject extra = JSONObject.parseObject(planDetail.getInfo());
+        getSchemas().stream().filter(v -> !v.isNotVisible4User()).forEach(v -> {
+            if (extra.get(v.getCode()) != null) {
+                infos.add(v.getName() + ":" + extra.get(v.getCode()));
+            }
+        });
+//        extra.entrySet().forEach(v -> infos.add(getField(v.getKey(), fields) + ":" + v.getValue().toString()));
         map.put("infos", infos);
         map.put("qrCode", user.getQrCode());
         return "userLogin";
@@ -90,15 +117,19 @@ public class WxController extends BaseController {
     public Object kq(@RequestParam Integer planId) {
         Plan plan = planService.findById(planId);
         User user = (User) getServletRequest().getSession().getAttribute("user");
-        if (planDetailService.findByUserIdAndPlanId(user.getId(), planId) == null) {
-            PlanDetail planDetail = new PlanDetail(user.getName(),user.getPhone(),user.getInfo(), planId, user.getId(), "", TimeFormatter.format(System.currentTimeMillis()), true);
+        PlanDetail exist = planDetailService.findByUserIdAndPlanId(user.getId(), planId);
+        if (exist == null && !plan.isDeleted() && plan.isRunning() && plan.isAutoKq()) {
+            PlanDetail planDetail = new PlanDetail(user.getName(), user.getPhone(), user.getInfo(), planId, user.getId(), "", TimeFormatter.format(System.currentTimeMillis()), true);
 
-            planDetailService.save(planDetail);
-            plan.setNowSize(plan.getNowSize());
+            exist = planDetailService.save(planDetail);
+            plan.setNowSize(plan.getNowSize() + 1);
             planService.save(plan);
         } else {
-            return fail("你已经打卡了!");
+            if (exist != null) {
+                return success(exist.getId(), "success");
+            }
+            return fail("你现在无法打卡!");
         }
-        return success();
+        return exist == null ? fail("打卡失败!") : success(exist.getId(), "success");
     }
 }

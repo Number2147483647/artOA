@@ -32,7 +32,7 @@ public class FieldContoller extends BaseController {
 
     @RequestMapping(value = "addField", method = RequestMethod.POST)
     @ResponseBody
-    public Object addField(@RequestParam String addField,@RequestParam boolean extendField) {
+    public Object addField(@RequestParam String addField,@RequestParam boolean extendField,@RequestParam boolean notVisible4User) {
         if (StringUtils.isEmpty(addField)) {
             return fail("输入有误!");
         }
@@ -44,6 +44,7 @@ public class FieldContoller extends BaseController {
         fields.setDeleted(false);
         fields.setName(addField);
         fields.setExtendField(extendField);
+        fields.setNotVisible4User(notVisible4User);
         Admin admin = (Admin) getServletRequest().getSession().getAttribute("admin");
         fields.setOwner(admin.getUsername());
 

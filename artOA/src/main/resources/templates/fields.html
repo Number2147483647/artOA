@@ -162,6 +162,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="control-label col-lg-2">对用户不可见</label>
+                                    <div class="col-lg-10">
+                                        <input name="notVisible4User" type="checkbox" id="notVisible4User">
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-10">
                                         <button class="btn btn-success waves-effect waves-light" type="button" onclick="addNew()">新增字段</button>
                                     </div>
@@ -284,7 +290,8 @@
 
     function addNew() {
         $.post('/admin/addField', {'addField': $("#nameField").val(),
-            'extendField':$("#extendFieldId").is(":checked")}, function (data) {
+            'extendField':$("#extendFieldId").is(":checked"),
+            'notVisible4User':$("#notVisible4User").is(":checked")}, function (data) {
             if (data['status'] != 'ok') {
                 $("#errMsg").text(data['msg']);
             } else {

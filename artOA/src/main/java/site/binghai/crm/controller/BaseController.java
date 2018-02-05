@@ -95,7 +95,7 @@ public abstract class BaseController {
         List<Schema> schema = new ArrayList<>();
         schema.add(new Schema("姓名"));
         schema.add(new Schema("手机号"));
-        schema.addAll(fieldService.findAll().stream().map(v -> new Schema(v.getName(), v.isExtendField())).collect(Collectors.toList()));
+        schema.addAll(fieldService.findAll().stream().map(v -> new Schema(v.getName(), v.isExtendField(),v.isNotVisible4User())).collect(Collectors.toList()));
         schema.add(new Schema("微信绑定"));
         schema.add(new Schema("二维码"));
         return schema;

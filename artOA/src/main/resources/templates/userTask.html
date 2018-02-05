@@ -24,7 +24,7 @@
                 <div class="list-block media-list">
                     <ul>
                         <li th:each="task:${tasks}">
-                            <a th:href="${(task.running && task.autoKq && task.deleted())?'javascript:kq('+task.id+')':'javascript:notOk()'}"
+                            <a th:href="${(task.running && task.autoKq && task.deleted())?'javascript:kq('+task.id+')':'javascript:notOk('+task.id+')'}"
                                class="item-link item-content">
                                 <div class="item-inner">
                                     <div class="item-title-row">
@@ -51,8 +51,15 @@
 <script>
     $.init();
 
-    function notOk() {
-        $.alert('你已经打卡或暂不可打卡');
+    function notOk(planId) {
+//        $.alert('你已经打卡或暂不可打卡');
+        $.getJSON('/user/kq?planId=' + planId, function (data) {
+            if (data['status'] != 'ok') {
+                $.alert(data['msg']);
+            } else {
+                window.location.href="/user/myInfo?pid="+data['data'];
+            }
+        })
     }
 
     function kq(planId) {
@@ -62,7 +69,7 @@
                     $.alert(data['msg']);
                 } else {
                     $.alert('打卡成功');
-                    window.location.reload();
+                    window.location.href="/user/myInfo?pid="+data['data'];
                 }
             })
         });

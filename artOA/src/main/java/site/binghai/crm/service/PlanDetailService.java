@@ -30,8 +30,8 @@ public class PlanDetailService {
     }
 
     @Transactional
-    public void save(PlanDetail planDetail) {
-        detailDao.save(planDetail);
+    public PlanDetail save(PlanDetail planDetail) {
+        return detailDao.save(planDetail);
     }
 
     public List<PlanDetail> findByPlanId(int planId) {

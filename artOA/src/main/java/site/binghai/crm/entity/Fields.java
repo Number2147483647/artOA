@@ -21,5 +21,6 @@ public class Fields {
     private String created;
     private String owner;
     private boolean extendField;
+    private boolean notVisible4User; // 对用户不可见
     private boolean isDeleted;
 }
