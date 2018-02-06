@@ -34,11 +34,11 @@
     <link href="/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
 
     <!-- DataTables -->
-    <link href="/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
-    <link href="/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="/plugins/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css"/>
 
 </head>
 
@@ -173,10 +173,14 @@
                                                 <div class="about-info-p m-b-0" th:if="${adminDebug}">
                                                     <strong>管理代打卡</strong>
                                                     <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                                        <input type="text" class="form-control" placeholder="输入学生姓名代打卡" id="debugName">
+                                                        <span class="input-group-addon"><i
+                                                                class="fa fa-user"></i></span>
+                                                        <input type="text" class="form-control" placeholder="输入学生姓名代打卡"
+                                                               id="debugName">
                                                         <span class="input-group-btn">
-                                                        <button type="button" class="btn waves-effect waves-light btn-primary" onclick="adminDebug()">打卡</button>
+                                                        <button type="button"
+                                                                class="btn waves-effect waves-light btn-primary"
+                                                                onclick="adminDebug()">打卡</button>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -184,7 +188,10 @@
                                                     <strong>房间管理</strong>
                                                     <br>
                                                     <a th:href="${'roomManage?planId='+plan.id}">
-                                                        <button type="button" class="btn btn-warning waves-effect waves-light m-b-5">房间管理</button>
+                                                        <button type="button"
+                                                                class="btn btn-warning waves-effect waves-light m-b-5">
+                                                            房间管理
+                                                        </button>
                                                     </a>
                                                 </div>
                                             </div>
@@ -299,6 +306,7 @@
             <button class="btn btn-danger" onclick="delKq({{:pid}})" ><i class="fa fa-trash"></i> <span>删除</span></button>
         </td>
     </tr>
+
 </script>
 <script th:inline="javascript">
     jQuery(document).ready(function ($) {
@@ -323,16 +331,16 @@
 
                 var template = $.templates("#kqRecords");
                 var html = template.render(data['data']['data']);
-                var lineSize = data['data']['data']['lines'].length;
-                if(lastHtml != html){
+                var lineSize = data['data']['lineSize'] + 1;
+                if (lastHtml != html) {
                     lastHtml = html;
                     $('#datatable').dataTable().fnDestroy();
                     $("#scanBody").html(lastHtml);
-                    $('#datatable').dataTable({"aaSorting": [[lineSize+1,'asc']]});
+                    $('#datatable').dataTable({"aaSorting": [[lineSize + 1, 'asc']]});
 
                     console.log("refresh");
                 }
-            }else{
+            } else {
                 $('#datatable').dataTable().fnDestroy();
                 $("#scanBody").html('');
                 $('#datatable').dataTable();
@@ -348,22 +356,25 @@
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: "我决定删除",
-            cancelButtonText:"取消",
+            cancelButtonText: "取消",
             closeOnConfirm: false
-        }, function(){
+        }, function () {
             delAjax(pid);
         });
     }
 
     function delAjax(pid) {
-        $.get('/admin/delKqPlanDetail?pid='+pid,function (data) {
+        $.get('/admin/delKqPlanDetail?pid=' + pid, function (data) {
             console.log(data);
             swal("OK", "已删除.", "success");
         })
     }
 
     function adminDebug() {
-        $.post("/admin/adminDebug",{'name':$("#debugName").val(),'planCode':$("#qrCodePass").val()},function (data) {
+        $.post("/admin/adminDebug", {
+            'name': $("#debugName").val(),
+            'planCode': $("#qrCodePass").val()
+        }, function (data) {
             swal(data['msg']);
         })
         $("#debugName").val('');

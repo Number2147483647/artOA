@@ -192,6 +192,7 @@ public class KqController extends BaseController {
         });
 
         data.put("data", bodyInfo);
+        data.put("lineSize", bodyInfo.size());
         return success(data, sb.toString());
     }
 

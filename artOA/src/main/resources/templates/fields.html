@@ -211,7 +211,7 @@
                                 <td th:text="${f.notVisible4User?'是':''}">张三</td>
                                 <td th:text="${f.created}">2018-1-1 10:10:10</td>
                                 <td>
-                                    <button class="btn btn-danger waves-effect waves-light btn-sm m-b-5" th:onclick="'delField('+f.id+')'">删除</button>
+                                    <button class="btn btn-danger waves-effect waves-light btn-sm m-b-5" th:onclick="${'delField('+f.id+')'}">删除</button>
                                 </td>
                             </tr>
                             </tbody>
