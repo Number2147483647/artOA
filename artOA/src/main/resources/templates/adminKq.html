@@ -310,6 +310,9 @@
 
 </script>
 <script th:inline="javascript">
+    var planId = [[${plan.id}]];
+    var lastHtml = '';
+
     jQuery(document).ready(function ($) {
         var text = $("#qrCodePass").val();
         var qrcode = new QRCode(document.getElementById("qrCodePassShow"), {
