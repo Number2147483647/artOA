@@ -26,7 +26,7 @@
     <link href="/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="/plugins/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css"/>
-
+    <link href="/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
     <script src="/js/modernizr.min.js"></script>
 
     <!-- Plugin Css-->
@@ -198,6 +198,7 @@
                                 <th>仅考勤显示</th>
                                 <th>对用户不可见</th>
                                 <th>添加时间</th>
+                                <th>操作</th>
                             </tr>
                             </thead>
 
@@ -209,6 +210,9 @@
                                 <td th:text="${f.extendField?'是':''}">张三</td>
                                 <td th:text="${f.notVisible4User?'是':''}">张三</td>
                                 <td th:text="${f.created}">2018-1-1 10:10:10</td>
+                                <td>
+                                    <button class="btn btn-danger waves-effect waves-light btn-sm m-b-5" th:onclick="'delField('+f.id+')'">删除</button>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -281,13 +285,12 @@
 <!-- Modal-Effect -->
 <script src="/plugins/modal-effect/js/classie.js"></script>
 <script src="/plugins/modal-effect/js/modalEffects.js"></script>
+<!-- Sweet-Alert  -->
+<script src="/plugins/sweetalert/dist/sweetalert.min.js"></script>
 
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
-        $('.counter').counterUp({
-            delay: 100,
-            time: 1200
-        });
+
     });
 
     function addNew() {
@@ -300,6 +303,23 @@
                 window.location.reload();
             }
         })
+    }
+
+    function delField(id) {
+        swal({
+            title: "你确定删除此条记录吗?",
+            text: "删除后将无法恢复!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "我决定删除",
+            cancelButtonText:"取消",
+            closeOnConfirm: false
+        }, function(){
+            $.get('/admin/deleteField?id='+id,function (data) {
+                window.location.reload();
+            })
+        });
     }
 </script>
 

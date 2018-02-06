@@ -7,14 +7,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import site.binghai.crm.entity.Fields;
-import site.binghai.crm.entity.Plan;
-import site.binghai.crm.entity.PlanDetail;
-import site.binghai.crm.entity.User;
-import site.binghai.crm.service.FieldService;
-import site.binghai.crm.service.PlanDetailService;
-import site.binghai.crm.service.PlanService;
-import site.binghai.crm.service.UserService;
+import site.binghai.crm.entity.*;
+import site.binghai.crm.service.*;
 import site.binghai.crm.utils.MD5;
 import site.binghai.crm.utils.TimeFormatter;
 
@@ -38,6 +32,8 @@ public class WxController extends BaseController {
     private PlanService planService;
     @Autowired
     private PlanDetailService planDetailService;
+    @Autowired
+    private RoomRecordService roomRecordService;
 
     @RequestMapping("myInfo")
     public String myInfo(ModelMap map, Integer pid) {
@@ -80,9 +76,15 @@ public class WxController extends BaseController {
             }
         });
 //        extra.entrySet().forEach(v -> infos.add(getField(v.getKey(), fields) + ":" + v.getValue().toString()));
+        infos.add("房间:" + getRoom4User(planDetail));
         map.put("infos", infos);
         map.put("qrCode", user.getQrCode());
         return "userLogin";
+    }
+
+    private String getRoom4User(PlanDetail planDetail) {
+        List<RoomRecord> rs = roomRecordService.findByPlanDetail(planDetail);
+        return rs == null ? "" : rs.get(0).getRoomName();
     }
 
     @RequestMapping("unBind")

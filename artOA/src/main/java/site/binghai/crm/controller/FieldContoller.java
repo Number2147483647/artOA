@@ -51,4 +51,11 @@ public class FieldContoller extends BaseController {
         fieldService.save(fields);
         return success();
     }
+
+    @RequestMapping("deleteField")
+    @ResponseBody
+    public Object deleteField(@RequestParam Integer id){
+        fieldService.delete(getAdmin(),id);
+        return success();
+    }
 }

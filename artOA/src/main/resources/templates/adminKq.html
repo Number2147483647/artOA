@@ -323,11 +323,12 @@
 
                 var template = $.templates("#kqRecords");
                 var html = template.render(data['data']['data']);
+                var lineSize = data['data']['data']['lines'].length;
                 if(lastHtml != html){
                     lastHtml = html;
                     $('#datatable').dataTable().fnDestroy();
                     $("#scanBody").html(lastHtml);
-                    $('#datatable').dataTable();
+                    $('#datatable').dataTable({"aaSorting": [[lineSize+1,'asc']]});
 
                     console.log("refresh");
                 }

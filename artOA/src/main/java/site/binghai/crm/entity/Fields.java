@@ -20,6 +20,8 @@ public class Fields {
     private String name;
     private String created;
     private String owner;
+    private String killer;
+    private String killTime;
     private boolean extendField;
     private boolean notVisible4User; // 对用户不可见
     private boolean isDeleted;
