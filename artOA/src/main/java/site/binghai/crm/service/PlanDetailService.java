@@ -46,7 +46,9 @@ public class PlanDetailService {
     }
 
     public List<PlanDetail> todayKq() {
-        return detailDao.findByCreatedTimeLike(TimeFormatter.format2yyyy_MM_dd(System.currentTimeMillis())).stream().filter(v -> !v.isDeleted()).collect(Collectors.toList());
+        return detailDao.findByCreatedTimeStartsWith(TimeFormatter.format2yyyy_MM_dd(System.currentTimeMillis()))
+                .stream().filter(v -> !v.isDeleted())
+                .collect(Collectors.toList());
     }
 
     public PlanDetail findById(int planDetailId) {

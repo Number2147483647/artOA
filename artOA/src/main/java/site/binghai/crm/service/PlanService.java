@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 public class PlanService {
 
     @Autowired
+    private PlanDetailService planDetailService;
+    @Autowired
     private PlanDao planDao;
 
     @Transactional
@@ -29,11 +31,21 @@ public class PlanService {
     public List<Plan> all() {
         return planDao.findAll().stream()
                 .filter(v -> !v.isDeleted())
-                .sorted((a, b) -> b.getId() - a.getId()).collect(Collectors.toList());
+                .sorted((a, b) -> b.getId() - a.getId())
+                .peek(v-> v.setNowSize(getNowSize(v)))
+                .collect(Collectors.toList());
+    }
+
+    private int getNowSize(Plan plan) {
+        return planDetailService.findByPlanId(plan.getId()).size();
     }
 
     public Plan findById(Integer id) {
-        return planDao.findOne(id);
+        Plan plan = planDao.findOne(id);
+        if(null != plan){
+            plan.setNowSize(getNowSize(plan));
+        }
+        return plan;
     }
 
     public Plan findByQrCode(String qrCode) {

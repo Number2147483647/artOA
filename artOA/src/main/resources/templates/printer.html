@@ -123,14 +123,14 @@
                 <!-- 主体内容 begin -->
                 <div class="panel-body">
 
-                    <div class="col-md-12">
+                    <div class="col-md-12" id="printPannel">
                         <form action="" method="post">
                             <div class="input-group m-t-10">
                                 <input type="text" class="form-control" name="anySearch" placeholder="输入任意过滤关键字进行过滤">
                                 <span class="input-group-btn">
                                                         <button type="submit"
                                                                 class="btn waves-effect waves-light btn-primary">过滤</button>
-                                <button type="button" onclick="window.print()"
+                                <button type="button" onclick="printStart()"
                                         class="btn waves-effect waves-light btn-info">打印</button>
                                                         </span>
                             </div>
@@ -210,6 +210,11 @@
     jQuery(document).ready(function ($) {
         qrShowRender();
     });
+
+    function printStart() {
+        $("#printPannel").hide();
+        window.print();
+    }
 </script>
 
 

@@ -2,6 +2,7 @@ package site.binghai.crm.dao;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import site.binghai.crm.entity.PlanDetail;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface PlanDetailDao extends JpaRepository<PlanDetail,Integer> {
     List<PlanDetail> findByUserIdAndPlanId(int userId,int planId);
     List<PlanDetail> findByPlanId(int planId);
     List<PlanDetail> findByPlanIdAndDeletedOrderByIdDesc(int planId, boolean isDeleted,Pageable pageable);
-    List<PlanDetail> findByCreatedTimeLike(String like);
+    List<PlanDetail> findByCreatedTimeStartsWith(String str);
 }
