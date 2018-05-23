@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+    <meta name="author" content="Coderthemes">
+
+    <link rel="shortcut icon" href="/images/favicon_1.ico">
+
+    <title>艺术信息管理系统</title>
+
+    <link href="http://s3.mogucdn.com/mlcdn/c45406/180122_44dal81cacf7ge657k6i8dljblcfa.css" rel="stylesheet"
+          type="text/css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/core.css" rel="stylesheet" type="text/css">
+    <link href="/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="/css/components.css" rel="stylesheet" type="text/css">
+    <link href="/css/pages.css" rel="stylesheet" type="text/css">
+    <link href="/css/menu.css" rel="stylesheet" type="text/css">
+    <link href="/css/responsive.css" rel="stylesheet" type="text/css">
+
+    <!-- DataTables -->
+    <link href="/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
+    <script src="/js/modernizr.min.js"></script>
+
+    <!-- Plugin Css-->
+    <link rel="stylesheet" href="http://s3.mogucdn.com/mlcdn/c45406/180122_21j45jbb6k94hbh53cel78jf0h06h.css">
+    <link rel="stylesheet" href="/plugins/jquery-datatables-editable/datatables.css">
+    <link href="/plugins/notifications/notification.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="http://s3.mogucdn.com/mlcdn/c45406/171127_3b6b06862307ia661k3bhf910dh50.js"></script>
+
+</head>
+
+
+<body class="fixed-left">
+
+<!-- Begin page -->
+<div id="wrapper">
+
+    <!-- Top Bar Start -->
+    <div class="topbar">
+        <!-- LOGO -->
+        <div class="topbar-left">
+            <div class="text-center">
+                <a href="/admin/index" class="logo"><i class="md md-terrain"></i> <span>985艺考服务系统 </span></a>
+            </div>
+        </div>
+        <!-- Button mobile view to collapse sidebar menu -->
+        <div class="navbar navbar-default" role="navigation">
+            <div class="container">
+                <div class="">
+                    <div class="pull-left">
+                        <button class="button-menu-mobile open-left">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <span class="clearfix"></span>
+                    </div>
+                    <form class="navbar-form pull-left" role="search" method="post" action="/admin/users">
+                        <div class="form-group">
+                            <input type="text" class="form-control search-bar" name="anySearch" placeholder="任意搜...">
+                        </div>
+                        <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+                    </form>
+
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+    <!-- Top Bar End -->
+
+
+    <!-- ========== Left Sidebar Start ========== -->
+
+    <div class="left side-menu">
+        <div class="sidebar-inner slimscrollleft">
+            <div class="user-details">
+                <div class="pull-left">
+                    <img src="/images/users/avatar-1.jpg" alt="" class="thumb-md img-circle">
+                </div>
+                <div class="user-info" th:include="myInfos">
+                    <!-- 引入我的信息 -->
+
+                </div>
+            </div>
+            <!--- Divider -->
+            <div id="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="/admin/index" class="waves-effect waves-light  " id="menu_1"><i
+                                class="md md-home"></i><span> 数据概览 </span></a>
+                    </li>
+
+                    <li>
+                        <a href="users.html" class="waves-effect waves-light active"><i
+                                class="md md-picture-in-picture"></i><span> 信息管理 </span></a>
+                    </li>
+                    <li>
+                        <a href="kq.html" class="waves-effect waves-light"><i
+                                class="md  ion-ios7-timer"></i><span> 考勤管理 </span></a>
+                    </li>
+                    <li>
+                        <a href="print" class="waves-effect waves-light"><i
+                                class="md ion-printer"></i><span> 数据打印 </span></a>
+                    </li>
+                </ul>
+                <div id="qr_show"></div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!-- Left Sidebar End -->
+
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container">
+                <!-- 主体内容 begin -->
+                <!-- Page-Title -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 class="pull-left page-title">字段管理</h4>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <span id="errMsg" style="color:red"></span>
+                        </div>
+                        <div class="form">
+                            <form action="#" class="cmxform form-horizontal tasi-form" id="commentForm" method="post" novalidate="novalidate">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2">字段名称</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" id="nameField"
+                                               placeholder="输入字段名然后点击添加，但注意字段名不可重复!">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2">仅考勤显示</label>
+                                    <div class="col-lg-10">
+                                        <input name="extendField" type="checkbox" id="extendFieldId">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2">对用户不可见</label>
+                                    <div class="col-lg-10">
+                                        <input name="notVisible4User" type="checkbox" id="notVisible4User">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        <button class="btn btn-success waves-effect waves-light" type="button" onclick="addNew()">新增字段</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <!--<div class="row">-->
+                        <!--<div class="col-sm-6">-->
+                        <!--<div class="m-b-30">-->
+                        <!--<button class="btn btn-primary waves-effect waves-light">新增记录 <i-->
+                        <!--class="fa fa-plus"></i></button>-->
+                        <!--<button class="btn btn-success waves-effect waves-light">标签管理 <i-->
+                        <!--class="fa fa-tags"></i></button>-->
+                        <!--<button class="btn btn-info waves-effect waves-light">字段管理 <i-->
+                        <!--class="fa fa-info"></i></button>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <table id="datatable" class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>字段名(中文)</th>
+                                <th>添加人</th>
+                                <th>仅考勤显示</th>
+                                <th>对用户不可见</th>
+                                <th>添加时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr th:each="f:${fields}">
+                                <td th:text="${f.id}">1</td><!--占位用-->
+                                <td th:text="${f.name}">身份证号</td>
+                                <td th:text="${f.owner}">张三</td>
+                                <td th:text="${f.extendField?'是':''}">张三</td>
+                                <td th:text="${f.notVisible4User?'是':''}">张三</td>
+                                <td th:text="${f.created}">2018-1-1 10:10:10</td>
+                                <td>
+                                    <button class="btn btn-danger waves-effect waves-light btn-sm m-b-5" th:onclick="${'delField('+f.id+')'}">删除</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <!-- 主体内容 end -->
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <footer class="footer text-right">
+            2018 © 冰海.
+        </footer>
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Right content here -->
+    <!-- ============================================================== -->
+
+</div>
+<!-- END wrapper -->
+
+
+<script>
+    var resizefunc = [];
+
+</script>
+
+<!-- jQuery  -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/detect.js"></script>
+<script src="/js/fastclick.js"></script>
+<script src="/js/jquery.slimscroll.js"></script>
+<script src="/js/jquery.blockUI.js"></script>
+<script src="/js/waves.js"></script>
+<script src="/js/wow.min.js"></script>
+<script src="/js/jquery.nicescroll.js"></script>
+<script src="/js/jquery.scrollTo.min.js"></script>
+
+<script src="/js/jquery.app.js"></script>
+
+<!-- moment js  -->
+<script src="/plugins/moment/moment.js"></script>
+
+<!-- counters  -->
+<script src="/plugins/waypoints/lib/jquery.waypoints.js"></script>
+<script src="/plugins/counterup/jquery.counterup.min.js"></script>
+<!-- Datatables-->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/plugins/datatables/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables/buttons.bootstrap.min.js"></script>
+<script src="/plugins/datatables/jszip.min.js"></script>
+<script src="/plugins/datatables/pdfmake.min.js"></script>
+<script src="/plugins/datatables/vfs_fonts.js"></script>
+<script src="/plugins/datatables/buttons.html5.min.js"></script>
+<script src="/plugins/datatables/buttons.print.min.js"></script>
+<script src="/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+<script src="/plugins/datatables/dataTables.keyTable.min.js"></script>
+<script src="/plugins/datatables/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables/responsive.bootstrap.min.js"></script>
+<script src="/plugins/datatables/dataTables.scroller.min.js"></script>
+<!--notify-->
+<script src="http://s3.mogucdn.com/mlcdn/c45406/180122_64kjgad5e9bhel4b25dgl8f6flfba.js"></script>
+<script src="/plugins/notifications/notify-metro.js"></script>
+<script src="/plugins/notifications/notifications.js"></script>
+
+<!-- Modal-Effect -->
+<script src="/plugins/modal-effect/js/classie.js"></script>
+<script src="/plugins/modal-effect/js/modalEffects.js"></script>
+<!-- Sweet-Alert  -->
+<script src="/plugins/sweetalert/dist/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+
+    });
+
+    function addNew() {
+        $.post('/admin/addField', {'addField': $("#nameField").val(),
+            'extendField':$("#extendFieldId").is(":checked"),
+            'notVisible4User':$("#notVisible4User").is(":checked")}, function (data) {
+            if (data['status'] != 'ok') {
+                $("#errMsg").text(data['msg']);
+            } else {
+                window.location.reload();
+            }
+        })
+    }
+
+    function delField(id) {
+        swal({
+            title: "你确定删除此条记录吗?",
+            text: "删除后将无法恢复!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "我决定删除",
+            cancelButtonText:"取消",
+            closeOnConfirm: false
+        }, function(){
+            $.get('/admin/deleteField?id='+id,function (data) {
+                window.location.reload();
+            })
+        });
+    }
+</script>
+
+
+</body>
+</html>
