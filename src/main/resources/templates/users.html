@@ -306,7 +306,7 @@
     });
 
     function delUser(uid) {
-        swal({
+    /*    swal({
             title: "你确定删除此用户吗?",
             text: "删除后将无法恢复!",
             type: "warning",
@@ -315,9 +315,9 @@
             confirmButtonText: "我决定删除",
             cancelButtonText:"取消",
             closeOnConfirm: false
-        },function(){
+        },function(){*/
             window.location.href="delUser?uid="+uid;
-        });
+       /* });*/
     }
 
     function editUser(uid) {
