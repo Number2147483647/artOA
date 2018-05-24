@@ -16,7 +16,7 @@ import site.binghai.crm.utils.MD5;
 import site.binghai.crm.utils.TimeFormatter;
 
 /**
- * Created by binghai on 2018/4/27.
+ * Created by Administrator on 2018/4/27.
  *
  * @ artOA
  */

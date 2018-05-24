@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 /**
- * Created by binghai on 2018/4/20.
+ * Created by Administrator on 2018/4/20.
  * 考勤细节
  *
  * @ artOA

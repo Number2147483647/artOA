@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import site.binghai.crm.entity.ErrLog;
 
 /**
- * Created by binghai on 2018/4/27.
+ * Created by Administrator on 2018/4/27.
  *
  * @ artOA
  */

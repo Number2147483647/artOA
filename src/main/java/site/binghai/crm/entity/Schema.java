@@ -4,7 +4,7 @@ import lombok.Data;
 import site.binghai.crm.utils.MD5;
 
 /**
- * Created by binghai on 2018/4/20.
+ * Created by Administrator on 2018/4/20.
  *
  * @ artOA
  */

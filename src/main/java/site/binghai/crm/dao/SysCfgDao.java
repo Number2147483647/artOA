@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import site.binghai.crm.entity.SysCfg;
 
 /**
- * Created by binghai on 2018/4/29.
+ * Created by Administrator 2018/4/29.
  *
  * @ artOA
  */
