@@ -231,7 +231,7 @@
     });
 
     function delKq(planId) {
-        swal({
+      /*  swal({
             title: "你确定删除这个打卡计划吗?",
             text: "删除后连同数据都将无法恢复!",
             type: "warning",
@@ -240,12 +240,12 @@
             confirmButtonText: "我决定删除",
             cancelButtonText:"不删除",
             closeOnConfirm: false
-        }, function(){
+        }, function(){*/
             window.location.href="delKq?id="+planId;
-        });
+      /*  });*/
     }
     function stopKq(planId) {
-        swal({
+       /* swal({
             title: "你确定关闭此次打卡计划吗?",
             text: "关闭后将无法再开启!",
             type: "warning",
@@ -254,9 +254,9 @@
             confirmButtonText: "我决定关闭",
             cancelButtonText:"不关闭",
             closeOnConfirm: false
-        }, function(){
+        }, function(){*/
            window.location.href="stopKq?id="+planId;
-        });
+      /*  });*/
     }
 </script>
 

@@ -306,7 +306,7 @@
     }
 
     function delField(id) {
-        swal({
+        /*swal({
             title: "你确定删除此条记录吗?",
             text: "删除后将无法恢复!",
             type: "warning",
@@ -316,11 +316,11 @@
             cancelButtonText:"取消",
             closeOnConfirm: false
         },function(){
-            alert("PPPPPPPPPPP");
+            alert("PPPPPPPPPPP");*/
             $.get('/admin/deleteField?id='+id,function (data) {
                 window.location.reload();
-            })
-        });
+            })/*
+        });*/
     }
 </script>
 
